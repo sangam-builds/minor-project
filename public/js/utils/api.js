@@ -1,12 +1,14 @@
 const API_BASE_URL = "/api"
 
 async function apiRequest(path, options = {}) {
+	const mergedHeaders = {
+		"Content-Type": "application/json",
+		...(options.headers || {}),
+	}
+
 	const response = await fetch(`${API_BASE_URL}${path}`, {
-		headers: {
-			"Content-Type": "application/json",
-			...(options.headers || {}),
-		},
 		...options,
+		headers: mergedHeaders,
 	})
 
 	const data = await response.json().catch(() => ({}))

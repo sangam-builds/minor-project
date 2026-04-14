@@ -5,6 +5,16 @@ const { generateToken } = require("../utils/jwt.utils.js")
 const { sendSuccess, sendError } = require("../utils/response.utils.js")
 const { getGoogleUserFromAccessToken } = require("../services/googleAuth.service.js")
 
+const mapUserForAuthResponse = (user) => {
+	return {
+		id: user._id,
+		name: user.name,
+		email: user.email,
+		onboardingCompleted: Boolean(user.onboardingCompleted),
+		onboarding: user.onboarding,
+	}
+}
+
 const register = async (req, res, next) => {
 	try {
 		const { name, email, password } = req.body
@@ -27,11 +37,7 @@ const register = async (req, res, next) => {
 
 		return sendSuccess(res, 201, "User registered successfully", {
 			token,
-			user: {
-				id: user._id,
-				name: user.name,
-				email: user.email,
-			},
+			user: mapUserForAuthResponse(user),
 		})
 	} catch (error) {
 		next(error)
@@ -56,11 +62,7 @@ const login = async (req, res, next) => {
 
 		return sendSuccess(res, 200, "Login successful", {
 			token,
-			user: {
-				id: user._id,
-				name: user.name,
-				email: user.email,
-			},
+			user: mapUserForAuthResponse(user),
 		})
 	} catch (error) {
 		next(error)
@@ -128,11 +130,43 @@ const googleAuth = async (req, res, next) => {
 
 		return sendSuccess(res, 200, "Google authentication successful", {
 			token,
-			user: {
-				id: user._id,
-				name: user.name,
-				email: user.email,
+			user: mapUserForAuthResponse(user),
+		})
+	} catch (error) {
+		next(error)
+	}
+}
+
+const saveOnboarding = async (req, res, next) => {
+	try {
+		const {
+			learning_interest,
+			experience_level,
+			learning_goal,
+			time_commitment,
+			learning_style,
+			prior_experience,
+		} = req.body
+
+		const user = await User.findByIdAndUpdate(
+			req.user._id,
+			{
+				onboardingCompleted: true,
+				onboarding: {
+					learning_interest,
+					experience_level,
+					learning_goal,
+					time_commitment,
+					learning_style,
+					prior_experience: prior_experience || "",
+					completedAt: new Date(),
+				},
 			},
+			{ new: true }
+		).select("-password")
+
+		return sendSuccess(res, 200, "Onboarding saved successfully", {
+			user: mapUserForAuthResponse(user),
 		})
 	} catch (error) {
 		next(error)
@@ -146,4 +180,5 @@ module.exports = {
 	logout,
 	googleClientConfig,
 	googleAuth,
+	saveOnboarding,
 }

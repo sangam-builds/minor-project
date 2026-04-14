@@ -3,12 +3,372 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>PathAI | Personalized Coding Learning Paths</title>
+    <meta
+        name="description"
+        content="AI-powered personalized learning paths that adapt to your real skill level."
+    >
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/global.css">
 </head>
 <body>
-    <h1>Home</h1>
-    <p>Welcome to the home page!</p>
-    <a href="/login.html">Go to Login</a>
-    
+    <div class="landing-shell">
+        <header class="nav-wrap">
+            <nav class="nav">
+                <a class="logo" href="/" aria-label="PathAI home">path<span>AI</span></a>
+                <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="siteNavLinks" type="button">Menu</button>
+                <div class="nav-links" id="siteNavLinks">
+                    <a href="#tracks" data-nav-section="tracks">Tracks</a>
+                    <a href="#how-it-works" data-nav-section="how-it-works">How it works</a>
+                    <a href="#why-pathai" data-nav-section="why-pathai">Why pathAI</a>
+                </div>
+                <div class="nav-actions">
+                    <a class="nav-login" href="/login">Log in</a>
+                    <a class="nav-cta" href="/register">Start free</a>
+                </div>
+            </nav>
+        </header>
+
+        <main class="hero-wrap">
+            <section class="hero-left">
+                <div class="hero-pill">
+                    <span class="pill-icon">✦</span>
+                    <span>AI-POWERED LEARNING PATHS</span>
+                </div>
+                <h1>
+                    Your brain is unique.<br>
+                    <span>Your path should be too.</span>
+                </h1>
+                <p class="hero-sub">
+                    Take a 3-minute quiz. Our AI maps your exact skill level and builds a learning path that adapts as you grow, not a generic syllabus everyone gets.
+                </p>
+                <p class="hero-track">Currently learning: <span class="hero-track-topic" id="heroTrackTopic">DSA with C++</span></p>
+                <div class="hero-actions">
+                    <a class="btn-main" href="/register">Build my path <span aria-hidden="true">→</span></a>
+                    <a class="btn-ghost" href="#how-it-works">See how it works</a>
+                </div>
+                <p class="hero-note">Free forever · No credit card · 3 min setup</p>
+            </section>
+
+            <section class="hero-right" aria-label="Live skill tree preview">
+                <article class="skill-card">
+                    <div class="skill-head">
+                        <p><span class="live-dot"></span> LIVE SKILL TREE</p>
+                        <span>DSA Track · Intermediate</span>
+                    </div>
+
+                    <div class="tree-map" role="img" aria-label="Progression from arrays to dynamic programming">
+                        <div class="unlock-toast" aria-live="polite">
+                            <div class="toast-check">✓</div>
+                            <div>
+                                <strong>Trees &amp; BSTs unlocked!</strong>
+                                <p>Quiz passed · 87% accuracy</p>
+                            </div>
+                        </div>
+
+                        <svg viewBox="0 0 540 150" class="skill-tree-svg" aria-hidden="true">
+                            <line x1="60" y1="40" x2="160" y2="80" class="edge edge-active" />
+                            <line x1="160" y1="80" x2="280" y2="50" class="edge edge-active" />
+                            <line x1="280" y1="50" x2="380" y2="100" class="edge edge-muted" />
+                            <line x1="380" y1="100" x2="480" y2="60" class="edge edge-muted" />
+
+                            <circle cx="60" cy="40" r="14" class="node-done" />
+                            <text x="60" y="40" class="node-mark">✓</text>
+                            <text x="60" y="67" class="node-label">Arrays</text>
+
+                            <circle cx="160" cy="80" r="14" class="node-done" />
+                            <text x="160" y="80" class="node-mark">✓</text>
+                            <text x="160" y="107" class="node-label">Linked Lists</text>
+
+                            <circle cx="280" cy="50" r="18" class="node-current" />
+                            <text x="280" y="50" class="node-mark">→</text>
+                            <text x="280" y="79" class="node-label">Trees</text>
+
+                            <circle cx="380" cy="100" r="10" class="node-locked" />
+                            <text x="380" y="100" class="node-lock">🔒</text>
+                            <text x="380" y="127" class="node-label node-label-muted">Graphs</text>
+
+                            <circle cx="480" cy="60" r="10" class="node-locked" />
+                            <text x="480" y="60" class="node-lock">🔒</text>
+                            <text x="480" y="87" class="node-label node-label-muted">DP</text>
+                        </svg>
+                    </div>
+
+                    <div class="progress-row" aria-label="Learning progress 40 percent">
+                        <div class="progress-bar"><div class="progress-fill"></div></div>
+                        <span>40%</span>
+                    </div>
+
+                    <div class="skill-metrics">
+                        <div><strong>2/5</strong><span>Completed</span></div>
+                        <div><strong>7 days</strong><span>Streak</span></div>
+                        <div><strong>85%</strong><span>Accuracy</span></div>
+                    </div>
+
+                </article>
+            </section>
+        </main>
+
+        <section class="feature-strip" aria-label="Platform capabilities">
+            <div class="feature-strip-track">
+                <div class="feature-strip-inner">
+                    <span>AI-generated paths</span>
+                    <span>Adaptive quizzes</span>
+                    <span>Quiz-gated progression</span>
+                    <span>Custom topics</span>
+                    <span>Skill tree visualization</span>
+                    <span>Spaced revision</span>
+                    <span>Interview prep</span>
+                    <span>Real-time adaptation</span>
+                </div>
+                <div class="feature-strip-inner" aria-hidden="true">
+                    <span>AI-generated paths</span>
+                    <span>Adaptive quizzes</span>
+                    <span>Quiz-gated progression</span>
+                    <span>Custom topics</span>
+                    <span>Skill tree visualization</span>
+                    <span>Spaced revision</span>
+                    <span>Interview prep</span>
+                    <span>Real-time adaptation</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="stats-band" aria-label="Platform impact metrics">
+            <article class="metric-card">
+                <h3>2,400+</h3>
+                <p>Active learners</p>
+            </article>
+            <article class="metric-card green">
+                <h3>94%</h3>
+                <p>Path completion rate</p>
+            </article>
+            <article class="metric-card amber">
+                <h3>3 min</h3>
+                <p>Quiz to first path</p>
+            </article>
+            <article class="metric-card">
+                <h3>12k+</h3>
+                <p>Quizzes completed</p>
+            </article>
+        </section>
+
+        <section class="how-preview" id="how-it-works" aria-label="How it works preview">
+            <p class="how-kicker">HOW IT WORKS</p>
+            <h2>From zero to roadmap in <span>3 minutes.</span></h2>
+
+            <div class="how-steps">
+                <div class="how-step-row">
+                    <div class="step-rail" aria-hidden="true">
+                        <span class="step-icon ic-1">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M8 10h8"></path>
+                                <path d="M8 14h6"></path>
+                                <path d="M7 4h10a2 2 0 012 2v12a2 2 0 01-2 2H7a2 2 0 01-2-2V6a2 2 0 012-2z"></path>
+                            </svg>
+                        </span>
+                    </div>
+                    <article class="how-step-card">
+                        <p class="how-index">01</p>
+                        <h3>Tell us what you want to learn</h3>
+                        <p>Type any topic - DSA, backend, ML, frontend. Our AI handles the rest.</p>
+                    </article>
+                </div>
+
+                <div class="how-step-row">
+                    <div class="step-rail" aria-hidden="true">
+                        <span class="step-icon ic-2">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M7 4h10a2 2 0 012 2v12a2 2 0 01-2 2H7a2 2 0 01-2-2V6a2 2 0 012-2z"></path>
+                                <path d="M9 8h6"></path>
+                                <path d="M9 12h6"></path>
+                                <path d="M9 16h4"></path>
+                            </svg>
+                        </span>
+                    </div>
+                    <article class="how-step-card">
+                        <p class="how-index">02</p>
+                        <h3>Take the adaptive quiz</h3>
+                        <p>8 questions that get harder or easier based on your answers. No trick questions - just real assessment.</p>
+                    </article>
+                </div>
+
+                <div class="how-step-row">
+                    <div class="step-rail rail-end" aria-hidden="true">
+                        <span class="step-icon ic-3">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="6" cy="8" r="2"></circle>
+                                <circle cx="18" cy="6" r="2"></circle>
+                                <circle cx="18" cy="18" r="2"></circle>
+                                <path d="M8 8h8"></path>
+                                <path d="M16.6 7.4l-8.6 8.6"></path>
+                            </svg>
+                        </span>
+                    </div>
+                    <article class="how-step-card">
+                        <p class="how-index">03</p>
+                        <h3>Get your unique skill tree</h3>
+                        <p>An AI-generated roadmap with quiz-gated nodes. Master each concept before moving on.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="why-section" id="why-pathai" aria-label="Why pathAI">
+            <p class="why-kicker">WHY PATHAI</p>
+            <h2>Not another course library.</h2>
+            <p class="why-sub">Every feature is built around one goal: understand where you are and take you exactly where you need to go.</p>
+
+            <div class="why-grid">
+                <article class="why-card span-2">
+                    <h3>
+                        <span class="why-ic ic-purple" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9.5 3A3.5 3.5 0 006 6.5v11A3.5 3.5 0 009.5 21"></path>
+                                <path d="M14.5 3A3.5 3.5 0 0118 6.5v11A3.5 3.5 0 0114.5 21"></path>
+                                <path d="M9 8h6"></path>
+                                <path d="M9 12h6"></path>
+                                <path d="M9 16h6"></path>
+                            </svg>
+                        </span>
+                        Adapts as you learn
+                    </h3>
+                    <p>The AI watches your speed, accuracy, and hint usage - then reorders your path in real-time. No two learners see the same sequence.</p>
+                </article>
+
+                <article class="why-card">
+                    <h3>
+                        <span class="why-ic ic-green" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="8"></circle>
+                                <path d="M12 8v4l3 2"></path>
+                                <path d="M4 12H2"></path>
+                                <path d="M22 12h-2"></path>
+                            </svg>
+                        </span>
+                        Any topic. Your path.
+                    </h3>
+                    <p>Type anything - "Rust systems programming" or "React hooks deep dive". The AI builds a complete skill tree from scratch.</p>
+                </article>
+
+                <article class="why-card">
+                    <h3>
+                        <span class="why-ic ic-amber" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 12a8 8 0 0114.9-4"></path>
+                                <path d="M20 4v6h-6"></path>
+                                <path d="M20 12a8 8 0 01-14.9 4"></path>
+                                <path d="M4 20v-6h6"></path>
+                            </svg>
+                        </span>
+                        Spaced revision
+                    </h3>
+                    <p>Micro-quizzes detect weak recall and re-surface topics right before you forget them.</p>
+                </article>
+
+                <article class="why-card">
+                    <h3>
+                        <span class="why-ic ic-purple" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="9"></circle>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </span>
+                        Interview-mapped
+                    </h3>
+                    <p>Every node maps to real interview questions from top companies. Practice what actually gets asked.</p>
+                </article>
+
+                <article class="why-card">
+                    <h3>
+                        <span class="why-ic ic-green" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 16l6-6 4 4 6-6"></path>
+                                <path d="M20 8v6h-6"></path>
+                            </svg>
+                        </span>
+                        Skill graph portfolio
+                    </h3>
+                    <p>Your profile shows a live skill graph - not just "courses completed". Share it with recruiters and mentors.</p>
+                </article>
+
+                <article class="why-card span-2">
+                    <h3>
+                        <span class="why-ic ic-amber" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M13 2L3 14h8l-1 8 11-14h-8l0-6z"></path>
+                            </svg>
+                        </span>
+                        Quiz-gated progression
+                    </h3>
+                    <p>You can't skip ahead. Pass the quiz to unlock the next node. This ensures real understanding, not speed-running.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="topics-section" id="tracks" aria-label="Popular learning topics">
+            <h2>Learn <span>anything.</span> Literally.</h2>
+            <p>Type any topic and our AI generates a full skill tree. Here are some popular ones:</p>
+
+            <div class="topics-grid">
+                <article class="topic-card tc-purple">
+                    <h3>DSA with C++</h3>
+                    <span>1.2k learners</span>
+                </article>
+                <article class="topic-card tc-green">
+                    <h3>Node.js Backend</h3>
+                    <span>890 learners</span>
+                </article>
+                <article class="topic-card tc-purple">
+                    <h3>React &amp; TypeScript</h3>
+                    <span>760 learners</span>
+                </article>
+                <article class="topic-card tc-amber">
+                    <h3>System Design</h3>
+                    <span>540 learners</span>
+                </article>
+
+                <article class="topic-card tc-green">
+                    <h3>Python for ML</h3>
+                    <span>430 learners</span>
+                </article>
+                <article class="topic-card tc-purple">
+                    <h3>SQL &amp; Databases</h3>
+                    <span>380 learners</span>
+                </article>
+                <article class="topic-card tc-amber">
+                    <h3>DevOps &amp; Docker</h3>
+                    <span>290 learners</span>
+                </article>
+                <article class="topic-card tc-purple">
+                    <h3>Your own topic →</h3>
+                    <span>Unlimited</span>
+                </article>
+            </div>
+
+            <a class="topics-cta" href="/register">Create your own track <span aria-hidden="true">→</span></a>
+        </section>
+
+        <footer class="landing-footer" aria-label="Footer">
+            <div class="footer-inner">
+                <div class="footer-brand">
+                    <a class="footer-logo" href="/">path<span>AI</span></a>
+                    <p>AI-powered learning paths that adapt to you.</p>
+                </div>
+
+                <nav class="footer-links" aria-label="Footer links">
+                    <a href="/courses">Tracks</a>
+                    <a href="/onboarding">How it works</a>
+                    <a href="/assessment">Why pathAI</a>
+                </nav>
+
+                <p class="footer-copy">&copy; 2026 pathAI</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="/js/pages/index.js"></script>
 </body>
 </html>

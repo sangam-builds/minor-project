@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Onboarding | The Fluid Intellect</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="/css/onboarding.css">
+</head>
+<body class="onboarding-page">
+	<main class="onboarding-shell">
+		<header class="onboarding-header">
+			<p class="eyebrow">Personalize Your Learning Experience</p>
+			<h1>Answer a few quick questions to get your custom learning path</h1>
+			<p>These preferences help us tailor your dashboard, recommendations, and quizzes.</p>
+		</header>
+
+		<form id="onboardingForm" class="onboarding-form" novalidate>
+			<section class="question-card">
+				<h2>What do you want to learn?</h2>
+				<p>Select one or more options</p>
+				<div class="option-grid" role="group" aria-label="Learning interests">
+					<label class="choice-pill"><input type="checkbox" name="learning_interest" value="Web Development">Web Development</label>
+					<label class="choice-pill"><input type="checkbox" name="learning_interest" value="Machine Learning">Machine Learning</label>
+					<label class="choice-pill"><input type="checkbox" name="learning_interest" value="App Development">App Development</label>
+					<label class="choice-pill"><input type="checkbox" name="learning_interest" value="Data Science">Data Science</label>
+					<label class="choice-pill"><input type="checkbox" name="learning_interest" value="Cybersecurity">Cybersecurity</label>
+					<label class="choice-pill"><input type="checkbox" name="learning_interest" value="Other">Other</label>
+				</div>
+			</section>
+
+			<section class="question-card">
+				<h2>What is your experience level?</h2>
+				<div class="option-grid compact">
+					<label class="choice-pill"><input type="radio" name="experience_level" value="Beginner" required>Beginner</label>
+					<label class="choice-pill"><input type="radio" name="experience_level" value="Intermediate">Intermediate</label>
+					<label class="choice-pill"><input type="radio" name="experience_level" value="Advanced">Advanced</label>
+				</div>
+			</section>
+
+			<section class="question-card">
+				<h2>Why are you learning?</h2>
+				<div class="option-grid compact">
+					<label class="choice-pill"><input type="radio" name="learning_goal" value="Get a job" required>Get a job</label>
+					<label class="choice-pill"><input type="radio" name="learning_goal" value="Build projects">Build projects</label>
+					<label class="choice-pill"><input type="radio" name="learning_goal" value="Freelancing">Freelancing</label>
+					<label class="choice-pill"><input type="radio" name="learning_goal" value="Just exploring">Just exploring</label>
+				</div>
+			</section>
+
+			<section class="question-card">
+				<h2>How much time can you give daily?</h2>
+				<div class="option-grid compact">
+					<label class="choice-pill"><input type="radio" name="time_commitment" value="30 mins" required>30 mins</label>
+					<label class="choice-pill"><input type="radio" name="time_commitment" value="1 hour">1 hour</label>
+					<label class="choice-pill"><input type="radio" name="time_commitment" value="2+ hours">2+ hours</label>
+					<label class="choice-pill"><input type="radio" name="time_commitment" value="Weekends only">Weekends only</label>
+				</div>
+			</section>
+
+			<section class="question-card">
+				<h2>How do you prefer to learn?</h2>
+				<div class="option-grid compact">
+					<label class="choice-pill"><input type="radio" name="learning_style" value="Videos" required>Videos</label>
+					<label class="choice-pill"><input type="radio" name="learning_style" value="Reading">Reading</label>
+					<label class="choice-pill"><input type="radio" name="learning_style" value="Projects">Projects</label>
+					<label class="choice-pill"><input type="radio" name="learning_style" value="Mixed">Mixed</label>
+				</div>
+			</section>
+
+			<section class="question-card">
+				<h2>Do you have any prior experience? <span class="optional">(Optional)</span></h2>
+				<div class="option-grid compact">
+					<label class="choice-pill"><input type="radio" name="prior_experience" value="No experience">No experience</label>
+					<label class="choice-pill"><input type="radio" name="prior_experience" value="Basic knowledge">Basic knowledge</label>
+					<label class="choice-pill"><input type="radio" name="prior_experience" value="Built projects">Built projects</label>
+				</div>
+			</section>
+
+			<p id="formMessage" class="form-message" aria-live="polite"></p>
+
+			<div class="actions">
+				<button id="submitButton" type="submit" class="primary-btn">Save & Continue</button>
+			</div>
+		</form>
+	</main>
+
+	<script src="/js/utils/api.js"></script>
+	<script src="/js/utils/auth.js"></script>
+	<script src="/js/pages/onboarding.js"></script>
+</body>
+</html>

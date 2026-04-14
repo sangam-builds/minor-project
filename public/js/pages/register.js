@@ -14,8 +14,13 @@
 
 	const existingAuth = window.Auth.getAuthData()
 	if (existingAuth?.token) {
-		window.location.href = "/dashboard"
+		const redirectPath = existingAuth?.user?.onboardingCompleted ? "/dashboard" : "/onboarding"
+		window.location.href = redirectPath
 		return
+	}
+
+	function resolvePostAuthPath(authData) {
+		return authData?.user?.onboardingCompleted ? "/dashboard" : "/onboarding"
 	}
 
 	function showMessage(text, isSuccess = false) {
@@ -75,7 +80,7 @@
 				showMessage("Google signup successful. Redirecting...", true)
 
 				setTimeout(() => {
-					window.location.href = "/dashboard"
+					window.location.href = resolvePostAuthPath(authData)
 				}, 600)
 			} catch (error) {
 				showMessage(error.message || "Google signup failed. Please try again.")
@@ -129,7 +134,7 @@
 			showMessage("Account created successfully. Redirecting...", true)
 
 			setTimeout(() => {
-				window.location.href = "/dashboard"
+				window.location.href = resolvePostAuthPath(authData)
 			}, 700)
 		} catch (error) {
 			showMessage(error.message || "Unable to create account right now. Please try again.")

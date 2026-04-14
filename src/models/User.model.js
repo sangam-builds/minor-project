@@ -30,6 +30,40 @@ const userSchema = new mongoose.Schema(
 			enum: ["local", "google"],
 			default: "local",
 		},
+		onboardingCompleted: {
+			type: Boolean,
+			default: false,
+		},
+		onboarding: {
+			learning_interest: {
+				type: [String],
+				default: [],
+			},
+			experience_level: {
+				type: String,
+				default: "",
+			},
+			learning_goal: {
+				type: String,
+				default: "",
+			},
+			time_commitment: {
+				type: String,
+				default: "",
+			},
+			learning_style: {
+				type: String,
+				default: "",
+			},
+			prior_experience: {
+				type: String,
+				default: "",
+			},
+			completedAt: {
+				type: Date,
+				default: null,
+			},
+		},
 	},
 	{
 		timestamps: true,

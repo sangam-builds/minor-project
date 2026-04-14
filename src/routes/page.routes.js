@@ -24,6 +24,10 @@ router.get("/dashboard", (req, res) => {
 	res.sendFile(path.join(publicDir, "dashboard.html"))
 })
 
+router.get("/onboarding", (req, res) => {
+	res.sendFile(path.join(publicDir, "onboarding.html"))
+})
+
 router.get("/dashboard.html", (req, res) => {
 	res.redirect("/dashboard")
 })

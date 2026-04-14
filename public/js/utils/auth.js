@@ -31,8 +31,31 @@ function clearAuthData() {
 	sessionStorage.removeItem(AUTH_STORAGE_KEY)
 }
 
+function updateAuthUser(userUpdates) {
+	const currentAuth = getAuthData()
+
+	if (!currentAuth) {
+		return null
+	}
+
+	const updatedAuth = {
+		...currentAuth,
+		user: {
+			...(currentAuth.user || {}),
+			...(userUpdates || {}),
+		},
+	}
+
+	const fromLocal = localStorage.getItem(AUTH_STORAGE_KEY)
+	const shouldPersistInLocal = Boolean(fromLocal)
+	saveAuthData(updatedAuth, shouldPersistInLocal)
+
+	return updatedAuth
+}
+
 window.Auth = {
 	saveAuthData,
 	getAuthData,
 	clearAuthData,
+	updateAuthUser,
 }

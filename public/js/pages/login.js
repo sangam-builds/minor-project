@@ -9,13 +9,17 @@
 	const nextPath = new URLSearchParams(window.location.search).get("next")
 	const safeRedirectPath = nextPath && nextPath.startsWith("/") ? nextPath : "/dashboard"
 
+	function resolvePostAuthPath() {
+		return safeRedirectPath
+	}
+
 	if (!form || !window.Api || !window.Auth) {
 		return
 	}
 
 	const existingAuth = window.Auth.getAuthData()
 	if (existingAuth?.token) {
-		window.location.href = safeRedirectPath
+		window.location.href = resolvePostAuthPath()
 		return
 	}
 
@@ -65,7 +69,7 @@
 				showMessage("Google login successful. Redirecting...", true)
 
 				setTimeout(() => {
-					window.location.href = safeRedirectPath
+					window.location.href = resolvePostAuthPath()
 				}, 600)
 			} catch (error) {
 				showMessage(error.message || "Google login failed. Please try again.")
@@ -118,7 +122,7 @@
 			showMessage("Login successful. Redirecting...", true)
 
 			setTimeout(() => {
-				window.location.href = safeRedirectPath
+				window.location.href = resolvePostAuthPath()
 			}, 600)
 		} catch (error) {
 			showMessage(error.message || "Unable to login right now. Please try again.")
