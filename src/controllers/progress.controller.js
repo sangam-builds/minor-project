@@ -44,12 +44,16 @@ const getDashboardSummary = async (req, res, next) => {
 	try {
 		const userId = req.user._id
 
-		const [topics, allCourses, userProgress] = await Promise.all([
+		const [topics, allCourses, userProgress, latestAssessment] = await Promise.all([
 			Topic.find({ isPublished: true }).select("_id courseId order title").sort({ order: 1 }).lean(),
-			Course.find({ isPublished: true }).select("_id title level totalTopics").lean(),
+			Course.find({ isPublished: true }).select("_id title level totalTopics track").lean(),
 			Progress.find({ userId })
 				.select("topicId courseId isAssessment score passingScore createdAt")
 				.sort({ createdAt: 1 })
+				.lean(),
+			Progress.findOne({ userId, isAssessment: true })
+				.select("assessmentTrack recommendedCourseId createdAt")
+				.sort({ createdAt: -1 })
 				.lean(),
 		])
 
@@ -235,11 +239,40 @@ const getDashboardSummary = async (req, res, next) => {
 			: 0
 
 		const preferredLevel = String(req.user.level || "beginner").toLowerCase()
+		const preferredTrack =
+			String(req.user.assessedTrack || latestAssessment?.assessmentTrack || "other").toLowerCase()
 		const sortedCourses = [...allCourses].sort(sortCoursesByLevel)
-		const allottedCourse =
-			sortedCourses.find((course) => String(course.level).toLowerCase() === preferredLevel) ||
-			sortedCourses[0] ||
-			null
+		const allottedFromUser = req.user.allottedCourseId ? String(req.user.allottedCourseId) : null
+		const allottedFromAssessment = latestAssessment?.recommendedCourseId
+			? String(latestAssessment.recommendedCourseId)
+			: null
+
+		let allottedCourse = null
+		if (allottedFromUser) {
+			allottedCourse = sortedCourses.find((course) => String(course._id) === allottedFromUser) || null
+		}
+		if (!allottedCourse && allottedFromAssessment) {
+			allottedCourse =
+				sortedCourses.find((course) => String(course._id) === allottedFromAssessment) || null
+		}
+		if (!allottedCourse && preferredTrack !== "other") {
+			allottedCourse =
+				sortedCourses.find(
+					(course) =>
+						String(course.track || "other").toLowerCase() === preferredTrack &&
+						String(course.level || "beginner").toLowerCase() === preferredLevel
+				) ||
+				sortedCourses.find(
+					(course) => String(course.track || "other").toLowerCase() === preferredTrack
+				) ||
+				null
+		}
+		if (!allottedCourse) {
+			allottedCourse =
+				sortedCourses.find((course) => String(course.level).toLowerCase() === preferredLevel) ||
+				sortedCourses[0] ||
+				null
+		}
 
 		const pathSourceIds = allottedCourse ? [String(allottedCourse._id)] : []
 
@@ -292,6 +325,7 @@ const getDashboardSummary = async (req, res, next) => {
 
 		return sendSuccess(res, 200, "Dashboard summary fetched", {
 			userName: req.user.name,
+			recommendedTrack: preferredTrack,
 			stats: {
 				activePaths: finishedPaths + inProgressPaths,
 				topicsMastered,

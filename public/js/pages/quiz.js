@@ -9,6 +9,8 @@
 		submitted: false,
 		score: 0,
 		level: 'beginner',
+		track: 'other',
+		allottedCourse: null,
 		isAssessment: false,
 		source: 'direct',
 		currentTopicId: null,
@@ -328,6 +330,12 @@
 				}),
 			})
 
+			if (quizState.isAssessment) {
+				quizState.level = response?.data?.level || quizState.level
+				quizState.track = response?.data?.track || 'other'
+				quizState.allottedCourse = response?.data?.allottedCourse || null
+			}
+
 			quizState.submitted = true
 
 			await displayResults()
@@ -437,11 +445,22 @@
 		}
 
 		if (quizState.isAssessment) {
+			const trackLabel =
+				quizState.track === 'dsa-cpp'
+					? 'DSA C++'
+					: quizState.track === 'nodejs'
+						? 'Node.js Backend'
+						: 'General'
+			const courseLabel = quizState.allottedCourse?.title
+				? `<p><strong>Allocated course:</strong> ${quizState.allottedCourse.title}</p>`
+				: ''
+
 			document.getElementById('resultsTitle').textContent = `Assessment Complete!`
-			document.getElementById('resultsSubtitle').textContent = `You're placed at ${capitalizeFirst(quizState.level)} level`
+			document.getElementById('resultsSubtitle').textContent = `You're placed at ${capitalizeFirst(quizState.level)} level • ${trackLabel}`
 			document.getElementById('resultsIcon').textContent = '🎉'
 			document.getElementById('resultsMessage').innerHTML = `
-				<p>Based on your performance, we recommend starting with <strong>${capitalizeFirst(quizState.level)}</strong> content to maximize your learning.</p>
+				<p>Based on your performance, we recommend the <strong>${trackLabel}</strong> track at <strong>${capitalizeFirst(quizState.level)}</strong> level.</p>
+				${courseLabel}
 			`
 		} else {
 			document.getElementById('resultsTitle').textContent = isPassed ? 'Quiz Passed!' : 'Quiz Completed'

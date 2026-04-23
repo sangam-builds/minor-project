@@ -1,8 +1,74 @@
 const Quiz = require('../models/Quiz.model.js')
 const Topic = require('../models/Topic.model.js')
+const Course = require('../models/Course.model.js')
 const Progress = require('../models/Progress.model.js')
 const User = require('../models/User.model.js')
 const { sendSuccess, sendError } = require('../utils/response.utils.js')
+
+const TRACKS = ['nodejs', 'dsa-cpp']
+
+const getTrackFromPreference = (trackPreference = '') => {
+	const value = String(trackPreference || '').toLowerCase()
+	if (value.includes('backend')) {
+		return 'nodejs'
+	}
+	if (value.includes('dsa')) {
+		return 'dsa-cpp'
+	}
+	return 'other'
+}
+
+const pickAssessmentTrack = ({ quiz, answers, fallbackPreference }) => {
+	const stats = {
+		nodejs: { correct: 0, total: 0 },
+		'dsa-cpp': { correct: 0, total: 0 },
+	}
+
+	quiz.questions.forEach((question, index) => {
+		const track = TRACKS.includes(question.track) ? question.track : null
+		if (!track) {
+			return
+		}
+
+		stats[track].total += 1
+		const selected = answers?.[index]
+		if (typeof selected === 'number' && selected === question.correctAnswer) {
+			stats[track].correct += 1
+		}
+	})
+
+	const nodeRatio = stats.nodejs.total > 0 ? stats.nodejs.correct / stats.nodejs.total : -1
+	const dsaRatio = stats['dsa-cpp'].total > 0 ? stats['dsa-cpp'].correct / stats['dsa-cpp'].total : -1
+
+	if (nodeRatio > dsaRatio) {
+		return { track: 'nodejs', stats }
+	}
+	if (dsaRatio > nodeRatio) {
+		return { track: 'dsa-cpp', stats }
+	}
+
+	if (stats.nodejs.correct > stats['dsa-cpp'].correct) {
+		return { track: 'nodejs', stats }
+	}
+	if (stats['dsa-cpp'].correct > stats.nodejs.correct) {
+		return { track: 'dsa-cpp', stats }
+	}
+
+	const fallback = getTrackFromPreference(fallbackPreference)
+	if (fallback !== 'other') {
+		return { track: fallback, stats }
+	}
+
+	if (stats['dsa-cpp'].total > 0) {
+		return { track: 'dsa-cpp', stats }
+	}
+
+	if (stats.nodejs.total > 0) {
+		return { track: 'nodejs', stats }
+	}
+
+	return { track: 'other', stats }
+}
 
 // Get assessment quiz
 const getAssessmentQuiz = async (req, res, next) => {
@@ -64,6 +130,9 @@ const submitQuiz = async (req, res, next) => {
 		}
 
 		let courseId = null
+		let computedLevel = null
+		let computedTrack = 'other'
+		let allottedCourse = null
 		if (quiz.topicId) {
 			const topic = await Topic.findById(quiz.topicId).select('courseId').lean()
 			courseId = topic?.courseId || null
@@ -74,19 +143,6 @@ const submitQuiz = async (req, res, next) => {
 			Math.min(totalQuestions, Math.round((score / 100) * totalQuestions))
 		)
 
-		await Progress.create({
-			userId: req.user._id,
-			quizId: quiz._id,
-			topicId: quiz.topicId || null,
-			courseId,
-			isAssessment: Boolean(isAssessment),
-			score,
-			passingScore: quiz.passingScore,
-			totalQuestions,
-			correctAnswers,
-		})
-
-		let computedLevel = null
 		if (Boolean(isAssessment)) {
 			if (score < 40) {
 				computedLevel = 'beginner'
@@ -96,14 +152,63 @@ const submitQuiz = async (req, res, next) => {
 				computedLevel = 'advanced'
 			}
 
+			const trackSelection = pickAssessmentTrack({
+				quiz,
+				answers,
+				fallbackPreference: req.user.onboarding?.track_preference,
+			})
+			computedTrack = trackSelection.track
+
+			if (computedTrack !== 'other') {
+				allottedCourse = await Course.findOne({
+					isPublished: true,
+					track: computedTrack,
+					level: computedLevel,
+				})
+					.select('_id title level track')
+					.lean()
+
+				if (!allottedCourse) {
+					allottedCourse = await Course.findOne({ isPublished: true, track: computedTrack })
+						.sort({ createdAt: 1 })
+						.select('_id title level track')
+						.lean()
+				}
+			}
+
 			await User.findByIdAndUpdate(req.user._id, {
 				level: computedLevel,
+				assessedTrack: computedTrack,
+				allottedCourseId: allottedCourse?._id || null,
 			})
 		}
+
+		await Progress.create({
+			userId: req.user._id,
+			quizId: quiz._id,
+			topicId: quiz.topicId || null,
+			courseId: courseId || allottedCourse?._id || null,
+			isAssessment: Boolean(isAssessment),
+			score,
+			passingScore: quiz.passingScore,
+			totalQuestions,
+			correctAnswers,
+			assessmentTrack: Boolean(isAssessment) ? computedTrack : null,
+			recommendedCourseId: Boolean(isAssessment) ? allottedCourse?._id || null : null,
+		})
 
 		return sendSuccess(res, 200, 'Quiz submitted successfully', {
 			score,
 			level: computedLevel,
+			track: Boolean(isAssessment) ? computedTrack : null,
+			allottedCourse: Boolean(isAssessment)
+				? {
+					id: allottedCourse?._id || null,
+					title: allottedCourse?.title || null,
+					level: allottedCourse?.level || null,
+					track: allottedCourse?.track || computedTrack,
+				}
+				: null,
 			totalQuestions,
 			passingScore: quiz.passingScore,
 		})

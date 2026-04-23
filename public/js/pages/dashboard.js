@@ -17,6 +17,7 @@
 
 	const fallbackName = authData.user?.name || "Learner"
 	const heroUserName = document.getElementById("heroUserName")
+	const heroSubtitle = document.getElementById("heroSubtitle")
 	const topUserName = document.getElementById("topUserName")
 	if (heroUserName) {
 		heroUserName.textContent = fallbackName
@@ -470,6 +471,17 @@
 		}
 		if (topUserName) {
 			topUserName.textContent = safeName
+		}
+
+		if (heroSubtitle) {
+			const rawTrack = String(payload.recommendedTrack || "other").toLowerCase()
+			const trackLabel =
+				rawTrack === "dsa-cpp"
+					? "DSA C++"
+					: rawTrack === "nodejs"
+						? "Node.js Backend"
+						: "General"
+			heroSubtitle.textContent = `Allocated track: ${trackLabel}`
 		}
 
 		const stats = payload.stats || {}

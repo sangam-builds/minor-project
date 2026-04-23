@@ -40,6 +40,17 @@ const CourseSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    track: {
+      type: String,
+      enum: ['nodejs', 'dsa-cpp', 'other'],
+      default: 'nodejs',
+    },
+    tags: [
+      {
+        type: String,
+        trim: true,
+      },
+    ],
   },
   {
     timestamps: true,
@@ -51,6 +62,7 @@ const CourseSchema = new mongoose.Schema(
 // Index for filtering courses by level quickly
 CourseSchema.index({ level: 1 });
 CourseSchema.index({ createdAt: -1 });
+CourseSchema.index({ track: 1, level: 1 });
 
 // Virtual — computed field, not stored in DB
 CourseSchema.virtual('topicCount').get(function () {

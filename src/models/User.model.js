@@ -35,6 +35,16 @@ const userSchema = new mongoose.Schema(
 			enum: ["beginner", "intermediate", "advanced"],
 			default: "beginner",
 		},
+		assessedTrack: {
+			type: String,
+			enum: ["nodejs", "dsa-cpp", "other"],
+			default: "other",
+		},
+		allottedCourseId: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "Course",
+			default: null,
+		},
 		onboardingCompleted: {
 			type: Boolean,
 			default: false,

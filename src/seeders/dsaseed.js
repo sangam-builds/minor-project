@@ -88,13 +88,18 @@
 
 
 
-require('dotenv').config({ path: require('path').resolve(__dirname, '../../../.env') });
+require('dotenv').config({ path: require('path').resolve(__dirname, '../../.env') });
 const mongoose = require('mongoose');
 const Course   = require('../models/Course.model');
 const Topic    = require('../models/Topic.model');
 const Quiz     = require('../models/Quiz.model');
 
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/learningpath_db';
+const MONGO_URI = process.env.MONGO_URI;
+
+if (!MONGO_URI || typeof MONGO_URI !== 'string') {
+  console.error('Missing MONGO_URI. Ensure .env exists at project root (app/.env) and contains MONGO_URI=<mongodb-uri>.');
+  process.exit(1);
+}
 
 // =====================================================================
 //  ASSESSMENT QUIZ — 10 questions (5 nodejs + 5 dsa-cpp)
@@ -1784,9 +1789,32 @@ async function seed() {
     console.log('\nConnected to MongoDB');
     console.log('URI:', MONGO_URI.replace(/:([^@]+)@/, ':****@'), '\n');
 
-    // Clear only dsa-cpp courses (preserves existing nodejs data)
-    const deletedCourses = await Course.deleteMany({ track: 'dsa-cpp' });
-    console.log(`Cleared ${deletedCourses.deletedCount} existing dsa-cpp courses`);
+    // Clear only existing DSA track data while preserving non-DSA content.
+    const dsaCourseTitles = dsaCppCourses.map((item) => item.course.title);
+    const existingDsaCourses = await Course.find({
+      $or: [
+        { track: 'dsa-cpp' },
+        { title: { $in: dsaCourseTitles } },
+      ],
+    })
+      .select('_id')
+      .lean();
+
+    const dsaCourseIds = existingDsaCourses.map((course) => course._id);
+    const dsaTopics = await Topic.find({ courseId: { $in: dsaCourseIds } })
+      .select('_id')
+      .lean();
+    const dsaTopicIds = dsaTopics.map((topic) => topic._id);
+
+    const [deletedTopicQuizzes, deletedTopics, deletedCourses] = await Promise.all([
+      Quiz.deleteMany({ topicId: { $in: dsaTopicIds } }),
+      Topic.deleteMany({ courseId: { $in: dsaCourseIds } }),
+      Course.deleteMany({ _id: { $in: dsaCourseIds } }),
+    ]);
+
+    console.log(
+      `Cleared DSA data: ${deletedCourses.deletedCount} courses, ${deletedTopics.deletedCount} topics, ${deletedTopicQuizzes.deletedCount} quizzes`
+    );
 
     // Clear or update assessment quiz
     const existing = await Quiz.findOne({ isAssessment: true });

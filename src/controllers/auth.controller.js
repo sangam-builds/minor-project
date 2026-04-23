@@ -162,7 +162,7 @@ const saveOnboarding = async (req, res, next) => {
 					completedAt: new Date(),
 				},
 			},
-			{ new: true }
+			{ returnDocument: "after" }
 		).select("-password")
 
 		return sendSuccess(res, 200, "Onboarding saved successfully", {

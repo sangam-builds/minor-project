@@ -29,6 +29,11 @@ const QuestionSchema = new mongoose.Schema(
       enum: ['beginner', 'intermediate', 'advanced'],
       default: 'beginner',
     },
+    track: {
+      type: String,
+      enum: ['nodejs', 'dsa-cpp', 'other'],
+      default: 'other',
+    },
     explanation: {
       type: String,
       default: '',

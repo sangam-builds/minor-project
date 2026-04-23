@@ -48,6 +48,16 @@ const progressSchema = new mongoose.Schema(
 			required: true,
 			min: 0,
 		},
+		assessmentTrack: {
+			type: String,
+			enum: ["nodejs", "dsa-cpp", "other"],
+			default: null,
+		},
+		recommendedCourseId: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "Course",
+			default: null,
+		},
 		attemptedAt: {
 			type: Date,
 			default: Date.now,
