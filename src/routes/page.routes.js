@@ -40,8 +40,41 @@ router.get("/courses", (req, res) => {
 	res.sendFile(path.join(publicDir, "courses.html"))
 })
 
+// Temporary safe fallbacks for flows that navigate to pages not yet implemented.
+router.get("/path", (req, res) => {
+	res.redirect("/courses")
+})
+
+router.get("/topic", (req, res) => {
+	res.redirect("/courses")
+})
+
+router.get("/results", (req, res) => {
+	res.redirect("/dashboard")
+})
+
+router.get("/profile", (req, res) => {
+	res.redirect("/dashboard")
+})
+
 router.get("/dashboard.html", (req, res) => {
 	res.redirect("/dashboard")
+})
+
+router.get("/path.html", (req, res) => {
+	res.redirect("/path")
+})
+
+router.get("/topic.html", (req, res) => {
+	res.redirect("/topic")
+})
+
+router.get("/results.html", (req, res) => {
+	res.redirect("/results")
+})
+
+router.get("/profile.html", (req, res) => {
+	res.redirect("/profile")
 })
 
 module.exports = router
