@@ -3,7 +3,8 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Onboarding | The Fluid Intellect</title>
+	<title>Personalized Learning Path | PathAI</title>
+	<meta name="description" content="Build your personalized coding learning path with AI.">
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -11,84 +12,196 @@
 </head>
 <body class="onboarding-page">
 	<main class="onboarding-shell">
-		<header class="onboarding-header">
-			<p class="eyebrow">Personalize Your Learning Experience</p>
-			<h1>Answer a few quick questions to get your custom learning path</h1>
-			<p>These preferences help us tailor your dashboard, recommendations, and quizzes.</p>
-		</header>
+		<section class="onboarding-screen active">
+			<!-- Header -->
+			<header class="onboarding-header welcome-header">
+				<div class="welcome-icon">✦</div>
+				<h1>Let's build your personal learning path</h1>
+				<p class="welcome-subtext">Answer these questions so we can recommend the right track and level for you</p>
+			</header>
 
-		<form id="onboardingForm" class="onboarding-form" novalidate>
-			<section class="question-card">
-				<h2>What do you want to learn?</h2>
-				<p>Select one or more options</p>
-				<div class="option-grid" role="group" aria-label="Learning interests">
-					<label class="choice-pill"><input type="checkbox" name="learning_interest" value="Web Development">Web Development</label>
-					<label class="choice-pill"><input type="checkbox" name="learning_interest" value="Machine Learning">Machine Learning</label>
-					<label class="choice-pill"><input type="checkbox" name="learning_interest" value="App Development">App Development</label>
-					<label class="choice-pill"><input type="checkbox" name="learning_interest" value="Data Science">Data Science</label>
-					<label class="choice-pill"><input type="checkbox" name="learning_interest" value="Cybersecurity">Cybersecurity</label>
-					<label class="choice-pill"><input type="checkbox" name="learning_interest" value="Other">Other</label>
+			<!-- All Questions Form -->
+			<form id="onboardingForm" class="form-container">
+				<!-- Question 1: Goal -->
+				<div class="form-section">
+					<h3 class="form-question-title">1. What is your main goal right now?</h3>
+					<div class="option-stack" role="group">
+						<label class="option-radio-button">
+							<input type="radio" name="main_goal" value="Crack placement interviews and get a job">
+							<span class="option-label">I want to crack placement interviews and get a job</span>
+						</label>
+						<label class="option-radio-button">
+							<input type="radio" name="main_goal" value="Build real projects and apps">
+							<span class="option-label">I want to build real projects and apps</span>
+						</label>
+						<label class="option-radio-button">
+							<input type="radio" name="main_goal" value="Get better at competitive programming">
+							<span class="option-label">I want to get better at competitive programming</span>
+						</label>
+						<label class="option-radio-button">
+							<input type="radio" name="main_goal" value="Learn programming from scratch">
+							<span class="option-label">I want to learn programming from scratch</span>
+						</label>
+						<label class="option-radio-button">
+							<input type="radio" name="main_goal" value="Just exploring and curious">
+							<span class="option-label">I am just exploring and curious</span>
+						</label>
+					</div>
+				</div>
+
+				<!-- Question 2: Background -->
+				<div class="form-section">
+					<h3 class="form-question-title">2. How would you describe your programming experience?</h3>
+					<div class="option-stack" role="group">
+						<label class="option-radio-button">
+							<input type="radio" name="background" value="Never written code">
+							<span class="option-label">I have never written a single line of code</span>
+						</label>
+						<label class="option-radio-button">
+							<input type="radio" name="background" value="Know the basics">
+							<span class="option-label">I know the basics — variables, loops, conditions</span>
+						</label>
+						<label class="option-radio-button">
+							<input type="radio" name="background" value="Built small projects">
+							<span class="option-label">I have built small projects or solved some problems</span>
+						</label>
+						<label class="option-radio-button">
+							<input type="radio" name="background" value="Comfortable coding">
+							<span class="option-label">I am comfortable coding but want to go deeper</span>
+						</label>
+						<label class="option-radio-button">
+							<input type="radio" name="background" value="Working or internship">
+							<span class="option-label">I am already working or have internship experience</span>
+						</label>
+					</div>
+				</div>
+
+				<!-- Question 3: Languages -->
+				<div class="form-section">
+					<h3 class="form-question-title">3. Which languages have you used before?</h3>
+					<p class="form-section-hint">Select all that apply</p>
+					<div class="option-grid-checkbox" role="group">
+						<label class="option-checkbox">
+							<input type="checkbox" name="languages" value="C or C++">
+							<span class="option-label">C or C++</span>
+						</label>
+						<label class="option-checkbox">
+							<input type="checkbox" name="languages" value="Java">
+							<span class="option-label">Java</span>
+						</label>
+						<label class="option-checkbox">
+							<input type="checkbox" name="languages" value="Python">
+							<span class="option-label">Python</span>
+						</label>
+						<label class="option-checkbox">
+							<input type="checkbox" name="languages" value="JavaScript">
+							<span class="option-label">JavaScript</span>
+						</label>
+						<label class="option-checkbox">
+							<input type="checkbox" name="languages" value="None yet">
+							<span class="option-label">None of these yet</span>
+						</label>
+					</div>
+				</div>
+
+				<!-- Question 4: Track -->
+				<div class="form-section">
+					<h3 class="form-question-title">4. What area do you most want to focus on?</h3>
+					<div class="option-stack" role="group">
+						<label class="option-radio-button">
+							<input type="radio" name="track_preference" value="DSA and interviews">
+							<span class="option-label">Data structures and algorithms — ace interviews</span>
+						</label>
+						<label class="option-radio-button">
+							<input type="radio" name="track_preference" value="Backend development">
+							<span class="option-label">Backend development — build APIs and servers</span>
+						</label>
+						<label class="option-radio-button">
+							<input type="radio" name="track_preference" value="Not sure yet">
+							<span class="option-label">I am not sure yet — help me decide</span>
+						</label>
+					</div>
+				</div>
+
+				<!-- Question 5: Time Commitment -->
+				<div class="form-section">
+					<h3 class="form-question-title">5. How much time can you dedicate each week?</h3>
+					<div class="option-stack" role="group">
+						<label class="option-radio-button">
+							<input type="radio" name="time_commitment" value="Less than 2 hours">
+							<span class="option-label">Less than 2 hours — I am very busy</span>
+						</label>
+						<label class="option-radio-button">
+							<input type="radio" name="time_commitment" value="2 to 5 hours">
+							<span class="option-label">2 to 5 hours — I can manage a few sessions</span>
+						</label>
+						<label class="option-radio-button">
+							<input type="radio" name="time_commitment" value="5 to 10 hours">
+							<span class="option-label">5 to 10 hours — I am fairly committed</span>
+						</label>
+						<label class="option-radio-button">
+							<input type="radio" name="time_commitment" value="More than 10 hours">
+							<span class="option-label">More than 10 hours — I am all in</span>
+						</label>
+					</div>
+				</div>
+
+				<!-- Question 6: Challenge -->
+				<div class="form-section">
+					<h3 class="form-question-title">6. What has stopped you from learning effectively?</h3>
+					<div class="option-stack" role="group">
+						<label class="option-radio-button">
+							<input type="radio" name="biggest_challenge" value="Didn't know where to start">
+							<span class="option-label">I never knew where to start or what to learn first</span>
+						</label>
+						<label class="option-radio-button">
+							<input type="radio" name="biggest_challenge" value="Lost motivation halfway">
+							<span class="option-label">I would start but lose motivation halfway</span>
+						</label>
+						<label class="option-radio-button">
+							<input type="radio" name="biggest_challenge" value="Content too easy">
+							<span class="option-label">The content was too easy and I got bored</span>
+						</label>
+						<label class="option-radio-button">
+							<input type="radio" name="biggest_challenge" value="Content too fast">
+							<span class="option-label">The content jumped too fast and I got lost</span>
+						</label>
+						<label class="option-radio-button">
+							<input type="radio" name="biggest_challenge" value="No progress tracking">
+							<span class="option-label">I had no way to know if I was making progress</span>
+						</label>
+					</div>
+				</div>
+
+				<!-- Error Message -->
+				<div id="formMessage" class="form-message" style="display: none;"></div>
+
+				<!-- Submit Button -->
+				<div class="screen-actions">
+					<button type="button" class="btn-primary" id="submitButton" style="width: 100%;">Find My Level →</button>
+				</div>
+			</form>
+		</section>
+
+		<!-- Success Screen -->
+		<div id="transition-screen" style="display: none;">
+			<section class="onboarding-screen active">
+				<header class="transition-header">
+					<div class="check-icon">✓</div>
+					<h1>Perfect. Now let's find your level.</h1>
+					<p class="transition-text">Based on your answers we think you would be a good fit for the <span id="selectedTrack" class="track-name">DSA</span> track. Answer 8 short questions — no code, just concepts — and we will place you at exactly the right level to start.</p>
+				</header>
+				<div class="screen-actions">
+					<button type="button" class="btn-primary" onclick="window.location.href='/assessment'">Open Level Assessment →</button>
 				</div>
 			</section>
+		</div>
 
-			<section class="question-card">
-				<h2>What is your experience level?</h2>
-				<div class="option-grid compact">
-					<label class="choice-pill"><input type="radio" name="experience_level" value="Beginner" required>Beginner</label>
-					<label class="choice-pill"><input type="radio" name="experience_level" value="Intermediate">Intermediate</label>
-					<label class="choice-pill"><input type="radio" name="experience_level" value="Advanced">Advanced</label>
-				</div>
-			</section>
-
-			<section class="question-card">
-				<h2>Why are you learning?</h2>
-				<div class="option-grid compact">
-					<label class="choice-pill"><input type="radio" name="learning_goal" value="Get a job" required>Get a job</label>
-					<label class="choice-pill"><input type="radio" name="learning_goal" value="Build projects">Build projects</label>
-					<label class="choice-pill"><input type="radio" name="learning_goal" value="Freelancing">Freelancing</label>
-					<label class="choice-pill"><input type="radio" name="learning_goal" value="Just exploring">Just exploring</label>
-				</div>
-			</section>
-
-			<section class="question-card">
-				<h2>How much time can you give daily?</h2>
-				<div class="option-grid compact">
-					<label class="choice-pill"><input type="radio" name="time_commitment" value="30 mins" required>30 mins</label>
-					<label class="choice-pill"><input type="radio" name="time_commitment" value="1 hour">1 hour</label>
-					<label class="choice-pill"><input type="radio" name="time_commitment" value="2+ hours">2+ hours</label>
-					<label class="choice-pill"><input type="radio" name="time_commitment" value="Weekends only">Weekends only</label>
-				</div>
-			</section>
-
-			<section class="question-card">
-				<h2>How do you prefer to learn?</h2>
-				<div class="option-grid compact">
-					<label class="choice-pill"><input type="radio" name="learning_style" value="Videos" required>Videos</label>
-					<label class="choice-pill"><input type="radio" name="learning_style" value="Reading">Reading</label>
-					<label class="choice-pill"><input type="radio" name="learning_style" value="Projects">Projects</label>
-					<label class="choice-pill"><input type="radio" name="learning_style" value="Mixed">Mixed</label>
-				</div>
-			</section>
-
-			<section class="question-card">
-				<h2>Do you have any prior experience? <span class="optional">(Optional)</span></h2>
-				<div class="option-grid compact">
-					<label class="choice-pill"><input type="radio" name="prior_experience" value="No experience">No experience</label>
-					<label class="choice-pill"><input type="radio" name="prior_experience" value="Basic knowledge">Basic knowledge</label>
-					<label class="choice-pill"><input type="radio" name="prior_experience" value="Built projects">Built projects</label>
-				</div>
-			</section>
-
-			<p id="formMessage" class="form-message" aria-live="polite"></p>
-
-			<div class="actions">
-				<button id="submitButton" type="submit" class="primary-btn">Save & Continue</button>
-			</div>
-		</form>
 	</main>
 
 	<script src="/js/utils/api.js"></script>
 	<script src="/js/utils/auth.js"></script>
+	<script src="/js/utils/ui.js"></script>
 	<script src="/js/pages/onboarding.js"></script>
 </body>
 </html>

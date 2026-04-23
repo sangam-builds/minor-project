@@ -140,12 +140,12 @@ const googleAuth = async (req, res, next) => {
 const saveOnboarding = async (req, res, next) => {
 	try {
 		const {
-			learning_interest,
-			experience_level,
-			learning_goal,
+			main_goal,
+			background,
+			languages,
+			track_preference,
 			time_commitment,
-			learning_style,
-			prior_experience,
+			biggest_challenge,
 		} = req.body
 
 		const user = await User.findByIdAndUpdate(
@@ -153,12 +153,12 @@ const saveOnboarding = async (req, res, next) => {
 			{
 				onboardingCompleted: true,
 				onboarding: {
-					learning_interest,
-					experience_level,
-					learning_goal,
+					main_goal,
+					background,
+					languages,
+					track_preference,
 					time_commitment,
-					learning_style,
-					prior_experience: prior_experience || "",
+					biggest_challenge,
 					completedAt: new Date(),
 				},
 			},

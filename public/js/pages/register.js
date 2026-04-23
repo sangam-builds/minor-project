@@ -12,6 +12,10 @@
 		return
 	}
 
+	if (window.UI) {
+		window.UI.renderFlashFromStorage()
+	}
+
 	const existingAuth = window.Auth.getAuthData()
 	if (existingAuth?.token) {
 		const redirectPath = existingAuth?.user?.onboardingCompleted ? "/dashboard" : "/onboarding"
@@ -78,6 +82,9 @@
 				const authData = await window.GoogleAuth.authenticateWithGoogle()
 				window.Auth.saveAuthData(authData, true)
 				showMessage("Google signup successful. Redirecting...", true)
+				if (window.UI) {
+					window.UI.setFlashMessage("Account created successfully.", "success")
+				}
 
 				setTimeout(() => {
 					window.location.href = resolvePostAuthPath(authData)
@@ -132,6 +139,9 @@
 
 			window.Auth.saveAuthData(authData, true)
 			showMessage("Account created successfully. Redirecting...", true)
+			if (window.UI) {
+				window.UI.setFlashMessage("Account created successfully.", "success")
+			}
 
 			setTimeout(() => {
 				window.location.href = resolvePostAuthPath(authData)

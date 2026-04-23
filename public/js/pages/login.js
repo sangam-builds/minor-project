@@ -17,6 +17,10 @@
 		return
 	}
 
+	if (window.UI) {
+		window.UI.renderFlashFromStorage()
+	}
+
 	const existingAuth = window.Auth.getAuthData()
 	if (existingAuth?.token) {
 		window.location.href = resolvePostAuthPath()
@@ -67,6 +71,9 @@
 				const authData = await window.GoogleAuth.authenticateWithGoogle()
 				window.Auth.saveAuthData(authData, true)
 				showMessage("Google login successful. Redirecting...", true)
+				if (window.UI) {
+					window.UI.setFlashMessage("Logged in successfully.", "success")
+				}
 
 				setTimeout(() => {
 					window.location.href = resolvePostAuthPath()
@@ -120,6 +127,9 @@
 
 			window.Auth.saveAuthData(authData, true)
 			showMessage("Login successful. Redirecting...", true)
+			if (window.UI) {
+				window.UI.setFlashMessage("Logged in successfully.", "success")
+			}
 
 			setTimeout(() => {
 				window.location.href = resolvePostAuthPath()

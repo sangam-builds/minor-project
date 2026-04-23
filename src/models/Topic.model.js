@@ -51,10 +51,7 @@ const TopicSchema = new mongoose.Schema(
   }
 );
 
-// Compound index — fetch all topics for a course in order efficiently
-TopicSchema.index({ courseId: 1, order: 1 });
-
-// Ensure topic order is unique within a course
+// Ensure topic order is unique within a course and efficient for ordered lookups
 TopicSchema.index({ courseId: 1, order: 1 }, { unique: true });
 
 // Virtual — link back to quiz (not stored)
@@ -63,6 +60,39 @@ TopicSchema.virtual('quiz', {
   localField: '_id',
   foreignField: 'topicId',
   justOne: true,
+});
+
+async function syncCourseTopics(courseId) {
+  if (!courseId) {
+    return;
+  }
+
+  const Course = mongoose.model('Course');
+  const topicDocs = await mongoose
+    .model('Topic')
+    .find({ courseId })
+    .sort({ order: 1, _id: 1 })
+    .select('_id')
+    .lean();
+
+  const topicIds = topicDocs.map((doc) => doc._id);
+
+  await Course.findByIdAndUpdate(courseId, {
+    topics: topicIds,
+    totalTopics: topicIds.length,
+  });
+}
+
+TopicSchema.post('save', async function () {
+  await syncCourseTopics(this.courseId);
+});
+
+TopicSchema.post('findOneAndDelete', async function (doc) {
+  await syncCourseTopics(doc?.courseId);
+});
+
+TopicSchema.post('deleteOne', { document: true, query: false }, async function () {
+  await syncCourseTopics(this.courseId);
 });
 
 module.exports = mongoose.model('Topic', TopicSchema);

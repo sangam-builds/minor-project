@@ -30,32 +30,41 @@ const userSchema = new mongoose.Schema(
 			enum: ["local", "google"],
 			default: "local",
 		},
+		level: {
+			type: String,
+			enum: ["beginner", "intermediate", "advanced"],
+			default: "beginner",
+		},
 		onboardingCompleted: {
 			type: Boolean,
 			default: false,
 		},
 		onboarding: {
-			learning_interest: {
+			main_goal: {
+				type: String,
+				default: "",
+			},
+			background: {
+				type: String,
+				default: "",
+			},
+			languages: {
 				type: [String],
 				default: [],
 			},
-			experience_level: {
+			track_preference: {
 				type: String,
 				default: "",
 			},
-			learning_goal: {
-				type: String,
-				default: "",
-			},
+				course_preference: {
+					type: String,
+					default: "",
+				},
 			time_commitment: {
 				type: String,
 				default: "",
 			},
-			learning_style: {
-				type: String,
-				default: "",
-			},
-			prior_experience: {
+			biggest_challenge: {
 				type: String,
 				default: "",
 			},

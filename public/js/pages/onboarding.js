@@ -1,10 +1,14 @@
 (() => {
 	const form = document.getElementById("onboardingForm")
 	const submitButton = document.getElementById("submitButton")
-	const messageElement = document.getElementById("formMessage")
+	const messageElement = document.querySelector("#formMessage")
 
 	if (!form || !window.Api || !window.Auth) {
 		return
+	}
+
+	if (window.UI) {
+		window.UI.renderFlashFromStorage()
 	}
 
 	const authData = window.Auth.getAuthData()
@@ -18,77 +22,109 @@
 		return
 	}
 
-	function showMessage(text, isSuccess = false) {
-		messageElement.textContent = text
-		messageElement.classList.toggle("success", isSuccess)
-	}
-
-	function getSelectedRadioValue(name) {
-		const selected = form.querySelector(`input[name="${name}"]:checked`)
-		return selected ? selected.value : ""
-	}
-
-	function getSelectedCheckboxValues(name) {
-		const selected = form.querySelectorAll(`input[name="${name}"]:checked`)
-		return Array.from(selected).map((item) => item.value)
-	}
-
-	function buildPayload() {
+	// Collect form data
+	function getFormData() {
 		return {
-			learning_interest: getSelectedCheckboxValues("learning_interest"),
-			experience_level: getSelectedRadioValue("experience_level"),
-			learning_goal: getSelectedRadioValue("learning_goal"),
-			time_commitment: getSelectedRadioValue("time_commitment"),
-			learning_style: getSelectedRadioValue("learning_style"),
-			prior_experience: getSelectedRadioValue("prior_experience"),
+			main_goal: form.querySelector('input[name="main_goal"]:checked')?.value || "",
+			background: form.querySelector('input[name="background"]:checked')?.value || "",
+			languages: Array.from(form.querySelectorAll('input[name="languages"]:checked')).map(el => el.value),
+			track_preference: form.querySelector('input[name="track_preference"]:checked')?.value || "",
+			time_commitment: form.querySelector('input[name="time_commitment"]:checked')?.value || "",
+			biggest_challenge: form.querySelector('input[name="biggest_challenge"]:checked')?.value || "",
 		}
 	}
 
-	function validatePayload(payload) {
-		if (!Array.isArray(payload.learning_interest) || payload.learning_interest.length === 0) {
-			return "Please select at least one learning interest."
+	// Validate all fields
+	function validateForm() {
+		const data = getFormData()
+
+		if (!data.main_goal) {
+			showMessage("Please select your main goal")
+			return false
+		}
+		if (!data.background) {
+			showMessage("Please select your programming background")
+			return false
+		}
+		if (data.languages.length === 0) {
+			showMessage("Please select at least one language or 'None yet'")
+			return false
+		}
+		if (!data.track_preference) {
+			showMessage("Please select your track preference")
+			return false
+		}
+		if (!data.time_commitment) {
+			showMessage("Please select your time commitment")
+			return false
+		}
+		if (!data.biggest_challenge) {
+			showMessage("Please select the challenge that resonates most")
+			return false
 		}
 
-		if (!payload.experience_level) {
-			return "Please select your experience level."
-		}
-
-		if (!payload.learning_goal) {
-			return "Please select your learning goal."
-		}
-
-		if (!payload.time_commitment) {
-			return "Please select your daily time commitment."
-		}
-
-		if (!payload.learning_style) {
-			return "Please select your learning style."
-		}
-
-		return ""
+		return true
 	}
 
-	form.addEventListener("submit", async (event) => {
+	function showMessage(text) {
+		if (!messageElement) return
+		if (text) {
+			messageElement.textContent = text
+			messageElement.style.display = "block"
+		} else {
+			messageElement.style.display = "none"
+			messageElement.textContent = ""
+		}
+	}
+
+	function showTransitionScreen() {
+		const formContainer = form.closest("section")
+		if (formContainer) {
+			formContainer.style.display = "none"
+		}
+		const transitionScreen = document.getElementById("transition-screen")
+		if (transitionScreen) {
+			transitionScreen.style.display = "block"
+		}
+	}
+
+	function redirectToAssessmentQuiz() {
+		if (window.UI) {
+			window.UI.setFlashMessage("Onboarding saved. Level assessment is ready.", "success")
+		}
+		window.location.href = "/assessment"
+	}
+
+	// Handle form submission
+	submitButton.addEventListener("click", async (event) => {
 		event.preventDefault()
-		showMessage("")
 
-		const payload = buildPayload()
-		const validationError = validatePayload(payload)
-		if (validationError) {
-			showMessage(validationError)
+		if (!validateForm()) {
+			window.scrollTo({ top: 0, behavior: "smooth" })
 			return
 		}
 
 		submitButton.disabled = true
 		submitButton.textContent = "Saving..."
+		showMessage("")
 
 		try {
+			const formData = getFormData()
+
+			// Update track name in transition screen
+			let trackName = "DSA"
+			if (formData.track_preference.includes("Backend")) {
+				trackName = "Backend"
+			}
+			document.getElementById("selectedTrack").textContent = trackName
+
+			// Submit to backend
 			const response = await window.Api.apiRequest("/auth/onboarding", {
 				method: "POST",
 				headers: {
 					Authorization: `Bearer ${authData.token}`,
 				},
-				body: JSON.stringify(payload),
+				body: JSON.stringify(formData),
 			})
 
 			const updatedUser = response?.data?.user
@@ -96,16 +132,14 @@
 				window.Auth.updateAuthUser(updatedUser)
 			}
 
-			showMessage("Great! Your learning profile has been saved.", true)
-
-			setTimeout(() => {
-				window.location.href = "/dashboard"
-			}, 650)
+			// Continue directly to assessment quiz after successful onboarding.
+			redirectToAssessmentQuiz()
 		} catch (error) {
-			showMessage(error.message || "Unable to save onboarding right now. Please try again.")
-		} finally {
+			console.error("Onboarding error:", error)
+			showMessage(error?.message || "Failed to save onboarding. Please try again.")
 			submitButton.disabled = false
-			submitButton.textContent = "Save & Continue"
+			submitButton.textContent = "Find My Level →"
 		}
 	})
 })()
+

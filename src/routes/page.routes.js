@@ -28,6 +28,18 @@ router.get("/onboarding", (req, res) => {
 	res.sendFile(path.join(publicDir, "onboarding.html"))
 })
 
+router.get("/quiz", (req, res) => {
+	res.sendFile(path.join(publicDir, "quiz.html"))
+})
+
+router.get("/assessment", (_req, res) => {
+	res.sendFile(path.join(publicDir, "assessment.html"))
+})
+
+router.get("/courses", (req, res) => {
+	res.sendFile(path.join(publicDir, "courses.html"))
+})
+
 router.get("/dashboard.html", (req, res) => {
 	res.redirect("/dashboard")
 })

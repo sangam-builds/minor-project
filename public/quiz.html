@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Quiz | PathAI</title>
+	<meta name="description" content="Test your knowledge with our interactive quizzes.">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="/css/quiz.css">
+</head>
+<body class="quiz-page">
+	<main class="quiz-container">
+		<!-- Loading State -->
+		<div id="loadingState" class="quiz-loading">
+			<div class="spinner"></div>
+			<p>Loading quiz...</p>
+		</div>
+
+		<!-- Quiz Interface -->
+		<div id="quizInterface" class="quiz-interface" style="display: none;">
+			<!-- Header -->
+			<header class="quiz-header">
+				<div class="quiz-nav">
+					<button class="back-btn" id="backBtn" onclick="goBack()">← Back</button>
+					<div class="quiz-title" id="quizTitle"></div>
+				</div>
+				<div class="quiz-progress">
+					<span id="questionCounter">1 / 10</span>
+					<div class="progress-bar">
+						<div class="progress-fill" id="progressFill"></div>
+					</div>
+				</div>
+			</header>
+
+			<!-- Question Card -->
+			<section class="quiz-content">
+				<div class="question-card">
+					<div class="question-header">
+						<span class="question-number" id="questionNumber">Question 1</span>
+					</div>
+					<h2 class="question-text" id="questionText"></h2>
+					<p class="question-meta" id="questionMeta"></p>
+
+					<!-- Options -->
+					<div class="options-container" id="optionsContainer"></div>
+
+					<!-- Explanation (shown after answer) -->
+					<div id="explanationBox" class="explanation-box" style="display: none;">
+						<div class="explanation-header">
+							<span class="explanation-title" id="explanationTitle">Explanation</span>
+							<span class="correct-badge" id="correctBadge"></span>
+						</div>
+						<p class="explanation-text" id="explanationText"></p>
+					</div>
+				</div>
+			</section>
+
+			<!-- Navigation -->
+			<footer class="quiz-footer">
+				<button class="btn-secondary" id="prevBtn" onclick="previousQuestion()" disabled>
+					← Previous
+				</button>
+				<div class="answer-indicator" id="answerIndicator"></div>
+				<button class="btn-primary" id="nextBtn" onclick="nextQuestion()" disabled>
+					Next →
+				</button>
+			</footer>
+		</div>
+
+		<!-- Results Screen -->
+		<div id="resultsScreen" class="results-screen" style="display: none;">
+			<div class="results-card">
+				<div class="results-icon" id="resultsIcon">✓</div>
+				<h1 class="results-title" id="resultsTitle"></h1>
+				<p class="results-subtitle" id="resultsSubtitle"></p>
+
+				<div class="results-stats">
+					<div class="stat">
+						<span class="stat-label">Score</span>
+						<span class="stat-value" id="scoreValue">0%</span>
+					</div>
+					<div class="stat">
+						<span class="stat-label">Correct</span>
+						<span class="stat-value" id="correctValue">0/10</span>
+					</div>
+					<div class="stat">
+						<span class="stat-label">Level</span>
+						<span class="stat-value" id="levelValue">Beginner</span>
+					</div>
+				</div>
+
+				<div class="results-message" id="resultsMessage"></div>
+
+				<div class="results-actions">
+					<button class="btn-secondary" id="resultSecondaryBtn" onclick="goToCourses()">Continue to Courses</button>
+					<button class="btn-primary" id="resultPrimaryBtn" onclick="reviewAnswers()">Review Answers</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- Error State -->
+		<div id="errorState" class="error-state" style="display: none;">
+			<div class="error-card">
+				<h2>Unable to Load Quiz</h2>
+				<p id="errorMessage"></p>
+				<button class="btn-primary" onclick="goBack()">Return to Dashboard</button>
+			</div>
+		</div>
+
+		<!-- Message Toast -->
+		<div id="messageToast" class="message-toast"></div>
+	</main>
+
+	<script src="/js/utils/api.js"></script>
+	<script src="/js/utils/auth.js"></script>
+	<script src="/js/utils/ui.js"></script>
+	<script src="/js/pages/quiz.js"></script>
+</body>
+</html>

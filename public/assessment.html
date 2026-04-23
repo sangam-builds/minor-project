@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Level Assessment | PathAI</title>
+	<meta name="description" content="Live level-check assessment dashboard synced with your latest database updates.">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="/css/assessment.css">
+</head>
+<body class="assessment-page">
+	<main class="assessment-shell">
+		<header class="assessment-hero">
+			<div class="hero-head">
+				<p class="hero-kicker">Live Level Check</p>
+				<h1>Assessment Center</h1>
+				<p class="hero-subtext">This is your assessment dashboard for level checking, not a topic quiz. Data below is pulled from your latest records in real time.</p>
+			</div>
+			<div class="live-pill" id="livePill" aria-live="polite">Syncing with database...</div>
+		</header>
+
+		<section class="assessment-grid">
+			<article class="panel spotlight" id="levelSpotlight">
+				<h2>Current Placement</h2>
+				<p class="spotlight-level" id="currentLevel">Checking...</p>
+				<p class="spotlight-meta" id="latestMeta">Fetching your latest assessment...</p>
+				<div class="score-row">
+					<div>
+						<span class="score-label">Latest Score</span>
+						<strong class="score-value" id="latestScore">--</strong>
+					</div>
+					<div>
+						<span class="score-label">Best Score</span>
+						<strong class="score-value" id="bestScore">--</strong>
+					</div>
+					<div>
+						<span class="score-label">Attempts</span>
+						<strong class="score-value" id="attemptCount">--</strong>
+					</div>
+				</div>
+				<div class="cta-row">
+					<button class="btn-primary" id="startAssessmentBtn" type="button">Start Level Check</button>
+					<button class="btn-secondary" id="goDashboardBtn" type="button">Back to Dashboard</button>
+				</div>
+			</article>
+
+			<article class="panel">
+				<h2>Track Focus</h2>
+				<p class="track-value" id="trackPreference">Not set yet</p>
+				<p class="panel-note">Your onboarding preference helps us recommend the right starting depth after level checking.</p>
+			</article>
+
+			<article class="panel">
+				<h2>Latest Attempt</h2>
+				<div class="attempt-block" id="latestAttemptBlock">
+					<p class="panel-note">No assessment attempts yet. Start your first level check.</p>
+				</div>
+			</article>
+
+			<article class="panel history">
+				<h2>Assessment Timeline</h2>
+				<ul id="historyList" class="history-list">
+					<li class="history-empty">No attempts yet.</li>
+				</ul>
+			</article>
+		</section>
+	</main>
+
+	<div id="countdownOverlay" class="countdown-overlay" aria-hidden="true">
+		<div class="countdown-card" role="dialog" aria-modal="true" aria-labelledby="countdownTitle">
+			<p class="countdown-kicker">Get Ready</p>
+			<h2 id="countdownTitle">Your level check starts in</h2>
+			<div class="countdown-ring" id="countdownRing" style="--progress: 100%;">
+				<div class="countdown-inner">
+					<p class="countdown-time" id="countdownTime">00:30</p>
+					<p class="countdown-note">Read the instructions and stay focused.</p>
+				</div>
+			</div>
+			<div class="countdown-actions">
+				<button type="button" class="btn-secondary" id="cancelCountdownBtn">Cancel</button>
+			</div>
+		</div>
+	</div>
+
+	<script src="/js/utils/api.js"></script>
+	<script src="/js/utils/auth.js"></script>
+	<script src="/js/utils/ui.js"></script>
+	<script src="/js/pages/assessment.js"></script>
+</body>
+</html>

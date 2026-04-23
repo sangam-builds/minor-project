@@ -1,19 +1,158 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard</title>
-    <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap"
+        rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/global.css" />
+    <link rel="stylesheet" href="/css/dashboard.css" />
 </head>
-<body>
-    <main class="dashboard-shell">
-        <h2>Dashboard</h2>
-        <button id="logoutButton" class="logout-btn" type="button">Log Out</button>
-    </main>
+<body class="dashboard-body">
+    <div class="dashboard-shell">
+        <header class="dash-topbar">
+            <a href="/" class="brand">path<span>AI</span></a>
+            <div class="topbar-actions">
+                <span id="topUserName" class="topbar-user">Learner</span>
+                <button id="logoutButton" class="icon-btn" type="button" aria-label="Logout">↪</button>
+            </div>
+        </header>
+
+        <main class="dash-main">
+            <section class="hero-row">
+                <div>
+                    <h1 class="hero-title">Welcome back, <span id="heroUserName">Learner</span></h1>
+                    <p class="hero-subtitle">Ready to level up? Pick a path and start learning.</p>
+                </div>
+                <button id="newPathButton" class="new-path-btn" type="button">+&nbsp;&nbsp;New learning path</button>
+            </section>
+
+            <section class="stats-grid">
+                <article class="stat-card">
+                    <span class="stat-icon">◫</span>
+                    <h2 id="statActivePaths">0</h2>
+                    <p>Active paths</p>
+                    <small id="statActivePathsMeta">0 topics</small>
+                </article>
+                <article class="stat-card">
+                    <span class="stat-icon stat-icon-green">◉</span>
+                    <h2><span id="statTopicsMastered">0</span>/<span id="statTotalTopics">0</span></h2>
+                    <p>Topics mastered</p>
+                    <small id="statTopicsMeta">0 paths done</small>
+                </article>
+                <article class="stat-card">
+                    <span class="stat-icon stat-icon-blue">⌘</span>
+                    <h2 id="statQuizzesSolved">0</h2>
+                    <p>Quizzes solved</p>
+                    <small><span id="statAverageScore">0</span>% avg score</small>
+                </article>
+                <article class="stat-card">
+                    <span class="stat-icon stat-icon-warm">◔</span>
+                    <h2 id="statDayStreak">0</h2>
+                    <p>Day streak</p>
+                    <small id="statStreakMeta">start today</small>
+                </article>
+            </section>
+
+            <section class="insights-grid">
+                <article class="panel chart-panel">
+                    <div class="panel-head">
+                        <h3>Learning activity</h3>
+                        <p>Quizzes and topics completed · last 14 days</p>
+                    </div>
+
+                    <div class="activity-chart-wrap">
+                        <div class="chart-canvas">
+                            <canvas id="activityChart" aria-label="Learning activity chart"></canvas>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="panel progress-panel">
+                    <div class="panel-head">
+                        <h3>Overall progress</h3>
+                        <p>Across all your paths</p>
+                    </div>
+
+                    <div class="ring-wrap">
+                        <div id="overallRing" class="progress-ring" role="img" aria-label="Overall progress percentage">
+                            <div class="ring-inner">
+                                <strong id="overallPercent">0%</strong>
+                                <span>AVG COMPLETE</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="progress-foot">
+                        <div>
+                            <strong id="finishedPaths">0</strong>
+                            <span>finished</span>
+                        </div>
+                        <div>
+                            <strong id="inProgressPaths">0</strong>
+                            <span>in progress</span>
+                        </div>
+                    </div>
+                </article>
+            </section>
+
+            <section class="advanced-grid">
+                <article class="panel transformation-panel">
+                    <div class="panel-head panel-head-split">
+                        <div>
+                            <h3>Your transformation</h3>
+                            <p>Where you started vs. where you are now</p>
+                        </div>
+                        <div class="avg-gain-box">
+                            <span>AVG GAIN</span>
+                            <strong id="avgGainValue">+0%</strong>
+                        </div>
+                    </div>
+
+                    <div class="transformation-chart-wrap">
+                        <canvas id="transformationChart" aria-label="Transformation chart"></canvas>
+                    </div>
+
+                    <div id="transformationLegend" class="transformation-legend"></div>
+                </article>
+
+                <article class="panel difficulty-panel">
+                    <div class="panel-head">
+                        <h3>Topics by difficulty</h3>
+                        <p>Mastered breakdown</p>
+                    </div>
+
+                    <div class="difficulty-chart-wrap">
+                        <canvas id="difficultyChart" aria-label="Topics by difficulty"></canvas>
+                    </div>
+
+                    <div class="difficulty-foot">
+                        <div><span class="dot dot-beginner"></span><span>Beginner</span><strong id="difficultyBeginner">0</strong></div>
+                        <div><span class="dot dot-intermediate"></span><span>Intermediate</span><strong id="difficultyIntermediate">0</strong></div>
+                        <div><span class="dot dot-advanced"></span><span>Advanced</span><strong id="difficultyAdvanced">0</strong></div>
+                    </div>
+                </article>
+            </section>
+
+            <section class="paths-section">
+                <div class="section-head">
+                    <h3>Your learning paths</h3>
+                    <span><span id="pathsTotal">0</span> total</span>
+                </div>
+                <div id="pathsGrid" class="paths-grid"></div>
+            </section>
+        </main>
+    </div>
 
     <script src="/js/utils/api.js"></script>
     <script src="/js/utils/auth.js"></script>
+    <script src="/js/utils/ui.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
     <script src="/js/pages/dashboard.js"></script>
 </body>
 </html>

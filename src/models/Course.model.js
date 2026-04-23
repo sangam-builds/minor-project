@@ -54,15 +54,17 @@ CourseSchema.index({ createdAt: -1 });
 
 // Virtual — computed field, not stored in DB
 CourseSchema.virtual('topicCount').get(function () {
-  return this.topics ? this.topics.length : 0;
+  if (Array.isArray(this.topics) && this.topics.length > 0) {
+    return this.topics.length;
+  }
+  return this.totalTopics || 0;
 });
 
 // Auto-update totalTopics count when topics array changes
-CourseSchema.pre('save', function (next) {
+CourseSchema.pre('save', function () {
   if (this.isModified('topics')) {
     this.totalTopics = this.topics.length;
   }
-  next();
 });
 
 module.exports = mongoose.model('Course', CourseSchema);

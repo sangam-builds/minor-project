@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Courses | PathAI</title>
+	<meta name="description" content="Dynamic course flow based on assessment performance with locked progression.">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="/css/courses.css">
+</head>
+<body class="courses-page">
+	<main class="courses-shell">
+		<header class="courses-header">
+			<div>
+				<p class="courses-kicker">Personalized Path</p>
+				<h1 id="courseTitle">Loading course...</h1>
+				<p class="courses-subtext" id="courseSubtitle">Reading your assessment performance and unlocking your path.</p>
+			</div>
+			<div class="header-actions">
+				<button type="button" class="btn-secondary" id="goDashboardBtn">Go to Dashboard</button>
+			</div>
+		</header>
+
+		<section class="summary-strip" id="summaryStrip">
+			<div class="summary-box"><span>Level</span><strong id="summaryLevel">-</strong></div>
+			<div class="summary-box"><span>Progress</span><strong id="summaryProgress">0%</strong></div>
+			<div class="summary-box"><span>Topics</span><strong id="summaryTopics">0/0</strong></div>
+		</section>
+
+		<section class="courses-grid">
+			<aside class="topic-sidebar">
+				<h2>Topics</h2>
+				<p class="sidebar-note">Next topic unlocks only after current topic quiz is passed.</p>
+				<ul id="topicList" class="topic-list"></ul>
+			</aside>
+
+			<article class="reader-panel">
+				<div id="readerEmpty" class="reader-empty">Select an unlocked topic to start reading.</div>
+				<div id="readerContent" class="reader-content" style="display: none;">
+					<div class="reader-head">
+						<div>
+							<p id="readerMeta" class="reader-meta"></p>
+							<h3 id="readerTitle"></h3>
+						</div>
+						<div class="reader-actions">
+							<button type="button" class="btn-primary" id="takeQuizBtn">Take Quiz</button>
+						</div>
+					</div>
+					<div id="readerBody" class="reader-body"></div>
+				</div>
+			</article>
+		</section>
+	</main>
+
+	<script src="/js/utils/api.js"></script>
+	<script src="/js/utils/auth.js"></script>
+	<script src="/js/utils/ui.js"></script>
+	<script src="/js/pages/courses.js"></script>
+</body>
+</html>
