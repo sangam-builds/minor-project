@@ -23,6 +23,23 @@ const getDateKey = (value) => {
 	return `${year}-${month}-${day}`
 }
 
+const levelPriority = {
+	beginner: 0,
+	intermediate: 1,
+	advanced: 2,
+}
+
+const sortCoursesByLevel = (a, b) => {
+	const left = levelPriority[String(a.level || "beginner").toLowerCase()] ?? 0
+	const right = levelPriority[String(b.level || "beginner").toLowerCase()] ?? 0
+
+	if (left !== right) {
+		return left - right
+	}
+
+	return String(a.title || "").localeCompare(String(b.title || ""))
+}
+
 const getDashboardSummary = async (req, res, next) => {
 	try {
 		const userId = req.user._id
@@ -217,10 +234,14 @@ const getDashboardSummary = async (req, res, next) => {
 				)
 			: 0
 
-		let pathSourceIds = Array.from(new Set([...activeCourses, ...masteredByCourse.keys()]))
-		if (!pathSourceIds.length) {
-			pathSourceIds = allCourses.slice(0, 4).map((course) => String(course._id))
-		}
+		const preferredLevel = String(req.user.level || "beginner").toLowerCase()
+		const sortedCourses = [...allCourses].sort(sortCoursesByLevel)
+		const allottedCourse =
+			sortedCourses.find((course) => String(course.level).toLowerCase() === preferredLevel) ||
+			sortedCourses[0] ||
+			null
+
+		const pathSourceIds = allottedCourse ? [String(allottedCourse._id)] : []
 
 		const learningPaths = pathSourceIds
 			.map((courseId) => {
