@@ -498,15 +498,14 @@ body.auth-page.signup-page {
 	}
 }
 
-@media (max-width: 980px) {
+@media (max-width: 600px) {
 	.auth-shell {
 		grid-template-columns: 1fr;
+		min-height: auto;
 	}
 
 	.auth-showcase {
-		min-height: 270px;
-		border-left: none;
-		border-top: 1px solid rgba(255, 255, 255, 0.06);
+		display: none;
 	}
 }
 
