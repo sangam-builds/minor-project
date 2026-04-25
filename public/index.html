@@ -11,6 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
     <link rel="stylesheet" href="/css/global.css">
 </head>
 <body>
@@ -20,9 +21,10 @@
                 <a class="logo" href="/" aria-label="PathAI home">path<span>AI</span></a>
                 <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="siteNavLinks" type="button">Menu</button>
                 <div class="nav-links" id="siteNavLinks">
-                    <a href="#tracks" data-nav-section="tracks">Tracks</a>
                     <a href="#how-it-works" data-nav-section="how-it-works">How it works</a>
                     <a href="#why-pathai" data-nav-section="why-pathai">Why pathAI</a>
+                    <a href="#tracks" data-nav-section="tracks">Tracks</a>
+                    <a href="#team" data-nav-section="team">Team</a>
                 </div>
                 <div class="nav-actions">
                     <a class="nav-login" href="/login">Log in</a>
@@ -351,6 +353,101 @@
             <a class="topics-cta" href="/register">Create your own track <span aria-hidden="true">→</span></a>
         </section>
 
+        <section class="team-section" id="team" aria-label="About the PathAI team">
+            <p class="team-kicker">ABOUT TEAM</p>
+            <h2>The people behind the <span>path</span></h2>
+            <p class="team-subtext">
+                We are three students who got tired of not knowing where to start, spending weeks on the wrong content, and having no way to tell if we were actually improving. So we stopped complaining and built the tool we wished existed.
+            </p>
+
+            <blockquote class="team-quote-banner">
+                <p>"Most platforms treat every student the same. We think that is the problem. The path should fit the person - not the other way around."</p>
+                <footer>- Sanagm, Aviral and Chidrup</footer>
+            </blockquote>
+
+            <div class="team-grid">
+                <article class="team-card">
+                    <div class="team-card-top">
+                        <div class="team-avatar team-avatar-lg">
+                            <img src="./images/sangam-avatar.jpeg" alt="Sangam Gupta avatar">
+                        </div>
+                        <div class="team-meta">
+                            <h3>Sangam Gupta</h3>
+                            <p class="team-role">Product and Backend Lead</p>
+                        </div>
+                    </div>
+                    <p class="team-intro">
+                        Sangam is the one who keeps the platform practical and focused on outcomes. He translates student pain points into features and builds the backend systems that keep progress tracking reliable. He is always asking, "Does this actually help someone learn faster?"
+                    </p>
+                    <p class="team-fact"><strong>Fun fact:</strong> He names internal builds after late-night snack combos.</p>
+                    <div class="team-links" aria-label="Rahul social links">
+                        <a href="https://www.linkedin.com/in/gupta-sangam/" target="_blank" rel="noopener noreferrer" aria-label="Sangam on LinkedIn">
+                            <i class="fa-brands fa-linkedin" aria-hidden="true"></i>
+                        </a>
+                        <a href="https://github.com/sangam-builds" target="_blank" rel="noopener noreferrer" aria-label="Rahul on GitHub">
+                            <i class="fa-brands fa-github" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </article>
+
+                <article class="team-card">
+                    <div class="team-card-top">
+                        <div class="team-avatar team-avatar-lg">
+                            <img src="./images/team-avatar.jpeg" alt="Priya Gupta avatar">
+                        </div>
+                        <div class="team-meta">
+                            <h3>Aviral Trivedi</h3>
+                            <p class="team-role">Learning Experience Designer</p>
+                        </div>
+                    </div>
+                    <p class="team-intro">
+                        Aviral shapes how the journey feels from onboarding to quiz feedback. She focuses on clarity, pacing, and removing the "what do I do next" confusion students face. She keeps the product honest by testing flows like a first-time learner every week.
+                    </p>
+                    <p class="team-fact"><strong>Fun fact:</strong> She color-codes her study notes and her grocery list with equal seriousness.</p>
+                    <div class="team-links" aria-label="Priya social links">
+                        <a href="https://www.linkedin.com/in/aviral-trivedi15/" target="_blank" rel="noopener noreferrer" aria-label="Priya on LinkedIn">
+                            <i class="fa-brands fa-linkedin" aria-hidden="true"></i>
+                        </a>
+                        <a href="https://github.com/" target="_blank" rel="noopener noreferrer" aria-label="Priya on GitHub">
+                            <i class="fa-brands fa-github" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </article>
+
+                <article class="team-card">
+                    <div class="team-card-top">
+                        <div class="team-avatar team-avatar-lg">
+                            <img src="./images/team-avatar.jpeg" alt="Chidrup Shrimali avatar">
+                        </div>
+                        <div class="team-meta">
+                            <h3>Chidrup Shrimali</h3>
+                            <p class="team-role">Frontend and Interaction Engineer</p>
+                        </div>
+                    </div>
+                    <p class="team-intro">
+                        Chidrup builds the interfaces that make complex progress data feel simple and motivating. He obsesses over transitions, micro-feedback, and keeping the experience fast on real student laptops. He also turns rough ideas into working UI prototypes in record time.
+                    </p>
+                    <p class="team-fact"><strong>Fun fact:</strong> He treats browser dev tools like a multiplayer game and plays to beat his own load-time scores.</p>
+                    <div class="team-links" aria-label="Aryan social links">
+                        <a href="https://www.linkedin.com/in/chidrup-shrimali/" target="_blank" rel="noopener noreferrer" aria-label="Aryan on LinkedIn">
+                            <i class="fa-brands fa-linkedin" aria-hidden="true"></i>
+                        </a>
+                        <a href="https://github.com/Lord-Chidrup" target="_blank" rel="noopener noreferrer" aria-label="Aryan on GitHub">
+                            <i class="fa-brands fa-github" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </article>
+            </div>
+
+            <div class="team-closing">
+                <p class="team-closing-title">Three people. One shared frustration. One shared goal.</p>
+                <p>
+                    We are still students ourselves and this platform is still growing. If a topic is missing, something feels off, or you have feedback on your experience - we actually read every message and we actually make changes based on what you tell us.
+                </p>
+                <p class="team-contact">Contact us: <a href="mailto:thesangamgupta@gmail.com">thesangamgupta@gmail.com</a></p>
+            </div>
+        </section>
+
         <footer class="landing-footer" aria-label="Footer">
             <div class="footer-inner">
                 <div class="footer-brand">
@@ -359,9 +456,10 @@
                 </div>
 
                 <nav class="footer-links" aria-label="Footer links">
-                    <a href="/courses">Tracks</a>
-                    <a href="/onboarding">How it works</a>
-                    <a href="/assessment">Why pathAI</a>
+                    <a href="#how-it-works">How it works</a>
+                    <a href="#why-pathai">Why pathAI</a>
+                    <a href="#tracks">Tracks</a>
+                    <a href="#team">Team</a>
                 </nav>
 
                 <p class="footer-copy">&copy; 2026 pathAI</p>

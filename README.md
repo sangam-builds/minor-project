@@ -24,6 +24,7 @@ This project combines:
 - [Getting Started](#getting-started)
 - [Environment Variables](#environment-variables)
 - [Database Seeding](#database-seeding)
+- [Production Deployment](#production-deployment)
 - [Current Behavior Notes](#current-behavior-notes)
 - [Future Improvements](#future-improvements)
 
@@ -303,16 +304,23 @@ Create a `.env` file at the project root.
 Suggested variables:
 
 ```env
+NODE_ENV=development
 PORT=3000
+HOST=0.0.0.0
 MONGO_URI=mongodb://localhost:27017/learningpath_db
+MONGO_TIMEOUT_MS=10000
 JWT_SECRET=your_super_secret_key
 JWT_EXPIRES_IN=7d
+CORS_ORIGIN=http://localhost:3000
+TRUST_PROXY=false
+JSON_LIMIT=100kb
 GOOGLE_CLIENT_ID=your_google_oauth_client_id
 ```
 
 Notes:
 - `MONGO_URI` is required for DB connection.
 - `JWT_SECRET` is required for token generation/verification.
+- `CORS_ORIGIN` is required in production and supports comma-separated origins.
 - `GOOGLE_CLIENT_ID` is required only for Google auth flow.
 
 ---
@@ -336,6 +344,26 @@ node src/seeders/initdata.js
 ```
 
 `initdata.js` currently clears users.
+
+---
+
+## Production Deployment
+
+Production readiness changes included:
+- CORS allowlist via `CORS_ORIGIN`
+- Request payload size limits via `JSON_LIMIT`
+- `GET /api/health` health endpoint
+- Environment validation at startup
+- Graceful shutdown on `SIGINT` / `SIGTERM`
+- Safer 5xx error responses in production
+
+Recommended deployment checklist:
+1. Set `NODE_ENV=production`.
+2. Set strong secrets and do not commit `.env`.
+3. Set `CORS_ORIGIN` to your frontend domain(s).
+4. Set `TRUST_PROXY=true` if deployed behind a reverse proxy (Render, Railway, Nginx, etc.).
+5. Verify `GET /api/health` after deployment.
+6. Rotate credentials if any secret was exposed.
 
 ---
 

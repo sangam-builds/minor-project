@@ -85,7 +85,6 @@
 			)
 
 			sections.forEach((section) => observer.observe(section))
-			setActive(sections[0].id)
 		}
 	}
 })()
