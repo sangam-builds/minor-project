@@ -13,6 +13,7 @@ This project combines:
 ## Table of Contents
 
 - [Overview](#overview)
+- [Working Demo](#working-demo)
 - [Core Features](#core-features)
 - [How the App Works](#how-the-app-works)
 - [Architecture](#architecture)
@@ -31,6 +32,12 @@ This project combines:
 ## Overview
 
 PathAI helps learners move through structured courses and topic quizzes with progression based on actual performance.
+
+---
+
+## Working Demo
+
+- Live Demo: [Add your deployed app URL here](https://your-demo-link-here)
 
 Key flow:
 1. User registers/logs in (email/password or Google).
