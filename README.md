@@ -37,7 +37,7 @@ PathAI helps learners move through structured courses and topic quizzes with pro
 
 ## Working Demo
 
-- Live Demo: [Add your deployed app URL here](https://your-demo-link-here)
+- Live Demo: ([https://minor-project-v9pi.onrender.com])
 
 Key flow:
 1. User registers/logs in (email/password or Google).
