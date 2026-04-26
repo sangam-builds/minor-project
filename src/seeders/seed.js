@@ -7,6 +7,29 @@ const Quiz = require('../models/Quiz.model');
 
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/learningpath_db';
 
+const ensureQuizTopicIndex = async () => {
+  const quizzesCollection = mongoose.connection.collection('quizzes');
+
+  // Repair legacy index shape that treats topicId=null as a duplicate key.
+  try {
+    await quizzesCollection.dropIndex('topicId_1');
+    console.log('Dropped legacy quizzes.topicId_1 index');
+  } catch (error) {
+    if (error.codeName !== 'IndexNotFound') {
+      throw error;
+    }
+  }
+
+  await quizzesCollection.createIndex(
+    { topicId: 1 },
+    {
+      name: 'topicId_1',
+      unique: true,
+      partialFilterExpression: { topicId: { $type: 'objectId' } },
+    }
+  );
+};
+
 // ═══════════════════════════════════════════════════════════════════════════
 //  ASSESSMENT QUIZ  —  10 questions spanning all 3 levels
 //  Score < 40%  → beginner   (0–3 correct)
@@ -115,6 +138,14 @@ const assessmentQuiz = {
       difficulty: 'advanced',
     },
   ],
+};
+
+const nodeAssessmentQuiz = {
+  ...assessmentQuiz,
+  questions: assessmentQuiz.questions.map((question) => ({
+    ...question,
+    track: 'nodejs',
+  })),
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -1901,6 +1932,8 @@ async function seed() {
     console.log('\nConnected to MongoDB');
     console.log('URI:', MONGO_URI.replace(/:([^@]+)@/, ':****@'));
 
+    await ensureQuizTopicIndex();
+
     // Clear existing data
     await Promise.all([
       Course.deleteMany({}),
@@ -1910,7 +1943,7 @@ async function seed() {
     console.log('Cleared existing data\n');
 
     // Create assessment quiz
-    const assessment = await Quiz.create(assessmentQuiz);
+    const assessment = await Quiz.create(nodeAssessmentQuiz);
     console.log(`Assessment quiz created (${assessment.questions.length} questions)`);
     console.log('  Score < 40%  → beginner');
     console.log('  Score 40-74% → intermediate');

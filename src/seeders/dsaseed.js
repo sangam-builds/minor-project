@@ -96,6 +96,29 @@ const Quiz     = require('../models/Quiz.model');
 
 const MONGO_URI = process.env.MONGO_URI;
 
+const ensureQuizTopicIndex = async () => {
+  const quizzesCollection = mongoose.connection.collection('quizzes');
+
+  // Repair legacy index shape that treats topicId=null as a duplicate key.
+  try {
+    await quizzesCollection.dropIndex('topicId_1');
+    console.log('Dropped legacy quizzes.topicId_1 index');
+  } catch (error) {
+    if (error.codeName !== 'IndexNotFound') {
+      throw error;
+    }
+  }
+
+  await quizzesCollection.createIndex(
+    { topicId: 1 },
+    {
+      name: 'topicId_1',
+      unique: true,
+      partialFilterExpression: { topicId: { $type: 'objectId' } },
+    }
+  );
+};
+
 if (!MONGO_URI || typeof MONGO_URI !== 'string') {
   console.error('Missing MONGO_URI. Ensure .env exists at project root (app/.env) and contains MONGO_URI=<mongodb-uri>.');
   process.exit(1);
@@ -1789,6 +1812,8 @@ async function seed() {
     console.log('\nConnected to MongoDB');
     console.log('URI:', MONGO_URI.replace(/:([^@]+)@/, ':****@'), '\n');
 
+    await ensureQuizTopicIndex();
+
     // Clear only existing DSA track data while preserving non-DSA content.
     const dsaCourseTitles = dsaCppCourses.map((item) => item.course.title);
     const existingDsaCourses = await Course.find({
@@ -1816,14 +1841,17 @@ async function seed() {
       `Cleared DSA data: ${deletedCourses.deletedCount} courses, ${deletedTopics.deletedCount} topics, ${deletedTopicQuizzes.deletedCount} quizzes`
     );
 
-    // Clear or update assessment quiz
-    const existing = await Quiz.findOne({ isAssessment: true });
+    // Clear or update only the DSA assessment quiz (do not overwrite backend assessment quiz).
+    const existing = await Quiz.findOne({
+      isAssessment: true,
+      'questions.track': 'dsa-cpp',
+    });
     if (existing) {
       await Quiz.findByIdAndUpdate(existing._id, { questions: assessmentQuiz.questions });
-      console.log(`Updated assessment quiz — ${assessmentQuiz.questions.length} questions\n`);
+      console.log(`Updated DSA assessment quiz — ${assessmentQuiz.questions.length} questions\n`);
     } else {
       await Quiz.create(assessmentQuiz);
-      console.log(`Created assessment quiz — ${assessmentQuiz.questions.length} questions\n`);
+      console.log(`Created DSA assessment quiz — ${assessmentQuiz.questions.length} questions\n`);
     }
 
     let totalTopics = 0, totalQuestions = 0;

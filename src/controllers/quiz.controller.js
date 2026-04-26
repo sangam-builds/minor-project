@@ -18,11 +18,51 @@ const getTrackFromPreference = (trackPreference = '') => {
 	return 'other'
 }
 
+const getTrackFromInput = (input = '') => {
+	const value = String(input || '').toLowerCase()
+
+	if (
+		value === 'nodejs' ||
+		value.includes('node') ||
+		value.includes('backend')
+	) {
+		return 'nodejs'
+	}
+
+	if (
+		value === 'dsa-cpp' ||
+		value.includes('dsa') ||
+		value.includes('cpp') ||
+		value.includes('c++')
+	) {
+		return 'dsa-cpp'
+	}
+
+	return 'other'
+}
+
+const countTrackQuestions = (quiz, requestedTrack) => {
+	const questions = Array.isArray(quiz?.questions) ? quiz.questions : []
+
+	if (requestedTrack === 'nodejs') {
+		// Backward compatibility: legacy backend assessments may have track='other'.
+		return questions.filter((question) => ['nodejs', 'other'].includes(question.track)).length
+	}
+
+	if (requestedTrack === 'dsa-cpp') {
+		return questions.filter((question) => question.track === 'dsa-cpp').length
+	}
+
+	return 0
+}
+
 const pickAssessmentTrack = ({ quiz, answers, fallbackPreference }) => {
 	const stats = {
 		nodejs: { correct: 0, total: 0 },
 		'dsa-cpp': { correct: 0, total: 0 },
 	}
+
+	const fallback = getTrackFromPreference(fallbackPreference)
 
 	quiz.questions.forEach((question, index) => {
 		const track = TRACKS.includes(question.track) ? question.track : null
@@ -40,6 +80,11 @@ const pickAssessmentTrack = ({ quiz, answers, fallbackPreference }) => {
 	const nodeRatio = stats.nodejs.total > 0 ? stats.nodejs.correct / stats.nodejs.total : -1
 	const dsaRatio = stats['dsa-cpp'].total > 0 ? stats['dsa-cpp'].correct / stats['dsa-cpp'].total : -1
 
+	// If onboarding already captured a preferred track, honor it.
+	if (fallback !== 'other') {
+		return { track: fallback, stats }
+	}
+
 	if (nodeRatio > dsaRatio) {
 		return { track: 'nodejs', stats }
 	}
@@ -54,17 +99,12 @@ const pickAssessmentTrack = ({ quiz, answers, fallbackPreference }) => {
 		return { track: 'dsa-cpp', stats }
 	}
 
-	const fallback = getTrackFromPreference(fallbackPreference)
-	if (fallback !== 'other') {
-		return { track: fallback, stats }
+	if (stats.nodejs.total > 0) {
+		return { track: 'nodejs', stats }
 	}
 
 	if (stats['dsa-cpp'].total > 0) {
 		return { track: 'dsa-cpp', stats }
-	}
-
-	if (stats.nodejs.total > 0) {
-		return { track: 'nodejs', stats }
 	}
 
 	return { track: 'other', stats }
@@ -73,11 +113,40 @@ const pickAssessmentTrack = ({ quiz, answers, fallbackPreference }) => {
 // Get assessment quiz
 const getAssessmentQuiz = async (req, res, next) => {
 	try {
-		const quiz = await Quiz.findOne({ isAssessment: true, isPublished: true })
+		const quizzes = await Quiz.find({ isAssessment: true, isPublished: true })
+			.sort({ createdAt: 1 })
+			.lean()
 
-		if (!quiz) {
+		if (!quizzes.length) {
 			return sendError(res, 404, 'Assessment quiz not found')
 		}
+
+		const requestedTrack =
+			getTrackFromInput(req.query?.track) !== 'other'
+				? getTrackFromInput(req.query?.track)
+				: getTrackFromPreference(req.user?.onboarding?.track_preference || req.user?.assessedTrack)
+
+		let quiz = quizzes[0]
+		if (requestedTrack !== 'other') {
+			let matchedQuiz = null
+			let matchedCount = 0
+
+			for (const currentQuiz of quizzes) {
+				const score = countTrackQuestions(currentQuiz, requestedTrack)
+				if (score > matchedCount) {
+					matchedQuiz = currentQuiz
+					matchedCount = score
+				}
+			}
+
+			if (!matchedQuiz || matchedCount === 0) {
+				const trackLabel = requestedTrack === 'nodejs' ? 'Backend' : 'C++/DSA'
+				return sendError(res, 404, `${trackLabel} assessment quiz is not available yet`)
+			}
+
+			quiz = matchedQuiz
+		}
+
 
 		return sendSuccess(res, 200, 'Assessment quiz fetched', {
 			quiz,

@@ -1,6 +1,6 @@
 (() => {
 	const POLL_INTERVAL_MS = 5000
-	const QUIZ_START_DELAY_SECONDS = 30
+	const QUIZ_START_DELAY_SECONDS = 10
 	let pollHandle = null
 	let countdownHandle = null
 	let countdownTarget = null
@@ -115,6 +115,17 @@
 			: "rgba(209, 155, 77, 0.16)"
 	}
 
+	const mapPreferenceToTrack = (authUser) => {
+		const preference = String(authUser?.onboarding?.track_preference || '').toLowerCase()
+		if (preference.includes('backend')) {
+			return 'nodejs'
+		}
+		if (preference.includes('dsa') || preference.includes('cpp') || preference.includes('c++')) {
+			return 'dsa-cpp'
+		}
+		return 'other'
+	}
+
 	const fetchAssessmentStatus = async (authToken) => {
 		const response = await window.Api.apiRequest("/progress/assessment-status", {
 			method: "GET",
@@ -139,7 +150,7 @@
 		elements.startAssessmentBtn.disabled = false
 		elements.startAssessmentBtn.textContent = startButtonDefaultLabel
 		elements.countdownRing.style.setProperty("--progress", "100%")
-		elements.countdownTime.textContent = "00:30"
+		elements.countdownTime.textContent = formatTimer(QUIZ_START_DELAY_SECONDS)
 	}
 
 	const stopCountdown = () => {
@@ -150,7 +161,7 @@
 		countdownTarget = null
 	}
 
-	const startCountdown = () => {
+	const startCountdown = (authUser) => {
 		if (countdownHandle) {
 			return
 		}
@@ -174,7 +185,12 @@
 
 			if (remainingSeconds <= 0) {
 				stopCountdown()
-				window.location.href = "/quiz?assessment=true"
+				const preferredTrack = mapPreferenceToTrack(authUser)
+				const quizUrl =
+					preferredTrack !== 'other'
+						? `/quiz?assessment=true&track=${encodeURIComponent(preferredTrack)}`
+						: '/quiz?assessment=true'
+				window.location.href = quizUrl
 			}
 		}
 
@@ -215,7 +231,7 @@
 		}
 
 		elements.startAssessmentBtn.addEventListener("click", () => {
-			startCountdown()
+			startCountdown(authData.user)
 		})
 
 		elements.goDashboardBtn.addEventListener("click", () => {

@@ -10,6 +10,17 @@ const levelPriority = {
 	advanced: 2,
 }
 
+const getTrackFromPreference = (trackPreference = "") => {
+	const value = String(trackPreference || "").toLowerCase()
+	if (value.includes("backend") || value.includes("node")) {
+		return "nodejs"
+	}
+	if (value.includes("dsa") || value.includes("cpp") || value.includes("c++")) {
+		return "dsa-cpp"
+	}
+	return "other"
+}
+
 const sortCoursesByLevel = (a, b) => {
 	const left = levelPriority[String(a.level || "beginner").toLowerCase()] ?? 0
 	const right = levelPriority[String(b.level || "beginner").toLowerCase()] ?? 0
@@ -23,11 +34,17 @@ const sortCoursesByLevel = (a, b) => {
 const getRecommendedCoursePlan = async (req, res, next) => {
 	try {
 		const preferredLevel = String(req.user.level || "beginner").toLowerCase()
+		const preferredTrack = String(
+			req.user.assessedTrack || getTrackFromPreference(req.user.onboarding?.track_preference)
+		).toLowerCase()
 		const requestedCourseId = String(req.query.courseId || "").trim()
 		const requestedTopicId = String(req.query.topicId || "").trim()
+		const allottedCourseId = req.user.allottedCourseId
+			? String(req.user.allottedCourseId)
+			: ""
 
 		const allCourses = await Course.find({ isPublished: true })
-			.select("_id title description level totalTopics")
+			.select("_id title description level totalTopics track")
 			.lean()
 
 		if (!allCourses.length) {
@@ -38,6 +55,19 @@ const getRecommendedCoursePlan = async (req, res, next) => {
 		let selectedCourse =
 			(requestedCourseId
 				? sortedCourses.find((course) => String(course._id) === requestedCourseId)
+				: null) ||
+			(allottedCourseId
+				? sortedCourses.find((course) => String(course._id) === allottedCourseId)
+				: null) ||
+			(preferredTrack !== "other"
+				? sortedCourses.find(
+						(course) =>
+							String(course.track || "other").toLowerCase() === preferredTrack &&
+							String(course.level || "beginner").toLowerCase() === preferredLevel
+				  ) ||
+				  sortedCourses.find(
+						(course) => String(course.track || "other").toLowerCase() === preferredTrack
+				  )
 				: null) ||
 			sortedCourses.find((course) => String(course.level).toLowerCase() === preferredLevel) ||
 			sortedCourses[0]
@@ -137,6 +167,7 @@ const getRecommendedCoursePlan = async (req, res, next) => {
 				title: selectedCourse.title,
 				description: selectedCourse.description,
 				level: selectedCourse.level,
+				track: selectedCourse.track || "other",
 				totalTopics: topicPlan.length,
 				completedTopics,
 				progressPercent:

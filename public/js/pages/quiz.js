@@ -34,6 +34,7 @@
 		const params = new URLSearchParams(window.location.search)
 		const quizId = params.get('quizId')
 		const isAssessment = params.get('assessment') === 'true'
+		const requestedTrack = params.get('track')
 		quizState.source = params.get('from') || 'direct'
 		quizState.currentTopicId = params.get('topicId') || null
 
@@ -46,6 +47,9 @@
 			showLoading()
 
 			let endpoint = isAssessment ? '/quiz/assessment' : `/quiz/${quizId}`
+			if (isAssessment && requestedTrack) {
+				endpoint = `${endpoint}?track=${encodeURIComponent(requestedTrack)}`
+			}
 			const response = await window.Api.apiRequest(endpoint, {
 				method: 'GET',
 				headers: {

@@ -92,9 +92,16 @@ const QuizSchema = new mongoose.Schema(
   }
 );
 
-// One quiz per topic
-QuizSchema.index({ topicId: 1 }, { unique: true, sparse: true });
-// sparse: true allows multiple documents where topicId is null (assessment quizzes)
+// One quiz per topic; assessments use topicId=null and are excluded from uniqueness.
+QuizSchema.index(
+  { topicId: 1 },
+  {
+    unique: true,
+    partialFilterExpression: {
+      topicId: { $type: 'objectId' },
+    },
+  }
+);
 
 // Index for finding the assessment quiz quickly
 QuizSchema.index({ isAssessment: 1 });
